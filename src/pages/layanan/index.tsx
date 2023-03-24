@@ -7,7 +7,7 @@ interface LayananPageProps {
 }
 export default function LayananPage(props: LayananPageProps) {
     return (
-        <Layanan />
+        <Layanan listLayanan={props.listLayanan} />
     )
 }
 

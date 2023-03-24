@@ -8,7 +8,7 @@ interface LayananProps {
 export default function LayananDetail(props: LayananProps) {
 
     return (
-        <Layanan />
+        <Layanan listLayanan={props.listLayanan} />
     )
 }
 // export async function getStaticProps(context: any) {

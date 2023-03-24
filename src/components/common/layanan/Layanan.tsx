@@ -33,7 +33,7 @@ interface LayananProps {
 }
 export default function Layanan(props: LayananProps) {
     const { user, setUser } = useContext(UserContext)
-    const [listLayanan, setListLayanan] = useState([])
+    const [listLayanan, setListLayanan] = useState(props.listLayanan)
     const router = useRouter();
     const { slug } = router.query;
     const filterSection = useRef<any>();
@@ -53,38 +53,38 @@ export default function Layanan(props: LayananProps) {
     }, [])
 
     useEffect(() => {
-        // const dataLayanan = listLayanan.find((data: any) => data.slug.toString() === slug);
+        const dataLayanan = listLayanan.find((data: any) => data.slug.toString() === slug);
 
-        // if (slug) {
-        //     AuthApi.get(`/ticket-message/${dataLayanan.id}`).then((res: any) => {
-        //         setDetailLayanan({
-        //             ...dataLayanan, message: res.data
-        //         });
-        //     })
-        // }
-
-        if (listLayanan.length === 0) {
-            AuthApi.get("/ticket/user").then(res => {
-                setListLayanan(res.data);
-                if (slug) {
-                    const dataLayanan = res.data.find((data: any) => data.slug.toString() === slug);
-                    AuthApi.get(`/ticket-message/${dataLayanan.id}`).then((res: any) => {
-                        setDetailLayanan({
-                            ...dataLayanan, message: res.data
-                        });
-                    })
-                }
+        if (slug) {
+            AuthApi.get(`/ticket-message/${dataLayanan.id}`).then((res: any) => {
+                setDetailLayanan({
+                    ...dataLayanan, message: res.data
+                });
             })
-        } else {
-            if (slug) {
-                const dataLayanan: any = listLayanan.find((data: any) => data.slug.toString() === slug);
-                AuthApi.get(`/ticket-message/${dataLayanan.id}`).then((res: any) => {
-                    setDetailLayanan({
-                        ...dataLayanan, message: res.data
-                    });
-                })
-            }
         }
+
+        // if (listLayanan.length === 0) {
+        //     AuthApi.get("/ticket/user").then(res => {
+        //         setListLayanan(res.data);
+        //         if (slug) {
+        //             const dataLayanan = res.data.find((data: any) => data.slug.toString() === slug);
+        //             AuthApi.get(`/ticket-message/${dataLayanan.id}`).then((res: any) => {
+        //                 setDetailLayanan({
+        //                     ...dataLayanan, message: res.data
+        //                 });
+        //             })
+        //         }
+        //     })
+        // } else {
+        //     if (slug) {
+        //         const dataLayanan: any = listLayanan.find((data: any) => data.slug.toString() === slug);
+        //         AuthApi.get(`/ticket-message/${dataLayanan.id}`).then((res: any) => {
+        //             setDetailLayanan({
+        //                 ...dataLayanan, message: res.data
+        //             });
+        //         })
+        //     }
+        // }
 
     }, [slug]);
 
