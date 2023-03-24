@@ -1,12 +1,7 @@
 import Head from 'next/head';
-import { ReactNode } from 'react'
+import { LayoutProps } from './layout.interface';
 
-interface CommonLayoutProps {
-    children: ReactNode;
-    title: string;
-    content?: string;
-}
-export default function Common(props: CommonLayoutProps) {
+export default function Dashboard(props: LayoutProps) {
     return (
         <>
             <Head>

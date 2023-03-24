@@ -1,3 +1,123 @@
+:root {
+    --primary-500: #0093DD;
+    --primary-600: #0072BE;
+    --primary-700: #00559F;
+    --primary-800: #003C80;
+    --primary-900: #002B6A;
+}
+
 body {
     font-family: 'DM Sans', sans-serif;
+}
+
+.helpdesk-shadow-24 {
+    box-shadow: 0px 0px 24px #F5F5F5;
+}
+
+/* untuk tampilan umum scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+/* untuk track */
+::-webkit-scrollbar-track {
+    background-color: #c7c7c7;
+}
+
+/* untuk thumb (bagian yang dapat digerakkan) */
+::-webkit-scrollbar-thumb {
+    background-color: #003C80;
+    border-radius: 4px;
+}
+
+.divider-bottom {
+    border-bottom: 1px solid #94A3B8;
+}
+
+input:placeholder-shown~.floating-label {
+    color: rgba(0, 0, 0, .4);
+    left: 8px;
+    bottom: 8px;
+    transform: scale(1, 1);
+}
+
+.can-see-password {
+    position: absolute;
+    right: 0;
+    text-align: center;
+    padding: 8px 16px 8px 8px;
+    cursor: pointer;
+}
+
+.floating-label {
+    position: absolute;
+    z-index: 10;
+    color: rgba(0, 0, 0, .4);
+    left: 4px;
+    bottom: 36px;
+    transition: .2s;
+    font-size: 16px;
+    transform: scale(.8, .8);
+}
+
+.peer:focus~.floating-label {
+    left: 4px;
+    bottom: 36px;
+    color: #0072BE;
+    transform: scale(.8, .8);
+}
+
+.profile-drop {
+    position: absolute;
+    animation-name: drop-profile-navbar;
+    animation-duration: .3s;
+    bottom: 0;
+    left: 0;
+    transform: translate(0, 100%);
+    background-color: white;
+    padding: 1rem;
+    border-radius: 4px;
+
+}
+
+.chat-entry {
+    animation-name: chat-entry-anim;
+    animation-duration: .5s;
+    transform-origin: bottom left;
+}
+
+/* bg-primary-600 py-2 font-medium rounded */
+.common-button {
+    color: white;
+    background-color: var(--primary-600);
+    font-weight: 500;
+    border-radius: 4px;
+}
+
+.common-button:hover {
+    background-color: var(--primary-700);
+}
+
+@keyframes chat-entry-anim {
+    from {
+        opacity: 0%;
+        translate: 0 -100px;
+    }
+
+    to {
+        /* opacity: 100%; */
+        translate: 0 0;
+    }
+}
+
+@keyframes drop-profile-navbar {
+    from {
+        opacity: 0%;
+        scale: .3;
+    }
+
+    to {
+        opacity: 100%;
+        scale: 1;
+    }
 }
