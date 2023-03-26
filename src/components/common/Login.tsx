@@ -35,7 +35,7 @@ export default function Login(props: LoginProps) {
         setloadingSubmit(true);
         closeAlert();
         api.post('/auth/login', credential).then(res => {
-            Cookies.set('jwt', res.data.access_token);
+            Cookies.set('jwt', res.data.access_token, { expires: 7 });
             setUser(res.data.user_data);
             setIsOpen(false);
             setAlert({

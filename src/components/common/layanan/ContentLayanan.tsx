@@ -6,13 +6,14 @@ interface LayananProps {
     detail: any;
     refSection: any;
     setDetail: any;
+    loadingDetail: boolean;
 }
 
-export default function ContentLayanan({ datas, detail, setDetail, refSection }: LayananProps) {
+export default function ContentLayanan({ datas, detail, setDetail, refSection, loadingDetail }: LayananProps) {
     return (
         <div className="flex gap-4">
             <ListLayanan datas={datas} refSection={refSection} />
-            <DetailLayanan detailLayanan={detail} setDetailLayanan={setDetail} />
+            <DetailLayanan detailLayanan={detail} setDetailLayanan={setDetail} loadingDetail={loadingDetail} />
         </div>
     )
 }

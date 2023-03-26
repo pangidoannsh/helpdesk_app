@@ -4,42 +4,25 @@ import Cookies from 'js-cookie';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useContext, useState } from 'react'
-
-interface ProfileProps {
-    setAlert: (alert: any) => void;
-}
-export default function Profile({ setAlert }: ProfileProps) {
+import { AlertContext } from '@/context/AlertProvider';
+export default function Profile() {
+    const { setAlert, closeAlert } = useContext(AlertContext)
     const { user, setUser } = useContext(UserContext);
     const router = useRouter();
     const [drop, setDrop] = useState(false);
     function handleLogout() {
         Cookies.remove('jwt');
         setUser({});
-        if (router.pathname !== "/") {
-            let time = 3;
-            setAlert({
-                isActived: true,
-                code: 1,
-                title: "Success",
-                message: "Logout Berhasil! redirect to home : " + time
-            })
-            const interval = setInterval(() => {
-                setAlert({
-                    isActived: true,
-                    code: 1,
-                    title: "Success",
-                    message: "Logout Berhasil! redirect to home : " + time
-                })
-                time--;
-                if (time === 0) {
-                    clearInterval(interval)
-                }
-            }, 1000)
-
-            setTimeout(() => {
-                router.push("/");
-            }, 4000);
-        }
+        setAlert({
+            isActived: true,
+            code: 1,
+            title: "Success",
+            message: "Logout Berhasil!"
+        })
+        setTimeout(() => {
+            closeAlert();
+        }, 3000);
+        if (router.pathname !== "/") router.push("/");
     }
     return (
         <div className='relative'>

@@ -32,7 +32,8 @@ interface LayananProps {
     detailLayanan?: any;
 }
 export default function Layanan(props: LayananProps) {
-    const { user, setUser } = useContext(UserContext)
+    const { user, setUser } = useContext(UserContext);
+    const [loadingDetail, setloadingDetail] = useState(false);
     const [listLayanan, setListLayanan] = useState(props.listLayanan)
     const router = useRouter();
     const { slug } = router.query;
@@ -56,35 +57,16 @@ export default function Layanan(props: LayananProps) {
         const dataLayanan = listLayanan.find((data: any) => data.slug.toString() === slug);
 
         if (slug) {
+            // setloadingDetail(true);
             AuthApi.get(`/ticket-message/${dataLayanan.id}`).then((res: any) => {
                 setDetailLayanan({
                     ...dataLayanan, message: res.data
                 });
+            }).catch(err => {
+                console.log(err.response);
             })
+            // .finally(() => setloadingDetail(false))
         }
-
-        // if (listLayanan.length === 0) {
-        //     AuthApi.get("/ticket/user").then(res => {
-        //         setListLayanan(res.data);
-        //         if (slug) {
-        //             const dataLayanan = res.data.find((data: any) => data.slug.toString() === slug);
-        //             AuthApi.get(`/ticket-message/${dataLayanan.id}`).then((res: any) => {
-        //                 setDetailLayanan({
-        //                     ...dataLayanan, message: res.data
-        //                 });
-        //             })
-        //         }
-        //     })
-        // } else {
-        //     if (slug) {
-        //         const dataLayanan: any = listLayanan.find((data: any) => data.slug.toString() === slug);
-        //         AuthApi.get(`/ticket-message/${dataLayanan.id}`).then((res: any) => {
-        //             setDetailLayanan({
-        //                 ...dataLayanan, message: res.data
-        //             });
-        //         })
-        //     }
-        // }
 
     }, [slug]);
 
@@ -121,7 +103,8 @@ export default function Layanan(props: LayananProps) {
                     </div>
                 </div>
 
-                <ContentLayanan datas={listLayanan} detail={detailLayanan} refSection={filterSection} setDetail={setDetailLayanan} />
+                <ContentLayanan datas={listLayanan} detail={detailLayanan} refSection={filterSection} setDetail={setDetailLayanan}
+                    loadingDetail={loadingDetail} />
 
             </div>
 

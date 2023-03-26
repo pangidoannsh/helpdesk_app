@@ -56,7 +56,7 @@ export default function CommonNavbar({ setOpenLoginModal }: CommonNavbarProps) {
                     </Link>
                 }
             </div>
-            {user.id ? <Profile setAlert={setAlert} /> : ''}
+            {user.id ? <Profile /> : ''}
         </nav>
     )
 }

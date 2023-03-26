@@ -25,7 +25,7 @@ export async function getServerSideProps(context: any) {
         };
     }
     let listLayanan: any = [];
-    await api.get("/ticket/user", {
+    await api.get("/ticket/user?status=open", {
         headers: { Authorization: `Bearer ${token}` }
     }).then(res => {
         listLayanan = res.data;

@@ -1,13 +1,16 @@
 import { api } from '@/config/api';
 import { parseCookies } from 'nookies';
 import Layanan from '@/components/common/layanan/Layanan';
+import { Suspense } from 'react';
 
 interface LayananPageProps {
     listLayanan?: any;
 }
 export default function LayananPage(props: LayananPageProps) {
     return (
-        <Layanan listLayanan={props.listLayanan} />
+        <Suspense fallback={<div>Loading...</div>}>
+            <Layanan listLayanan={props.listLayanan} />
+        </Suspense>
     )
 }
 
@@ -23,7 +26,7 @@ export async function getServerSideProps(context: any) {
     }
 
     let listLayanan: any = [];
-    await api.get("/ticket/user", {
+    await api.get("/ticket/user?status=open", {
         headers: { Authorization: `Bearer ${token}` }
     }).then(res => {
         listLayanan = res.data

@@ -20,6 +20,7 @@ module.exports = {
         },
         secondary: "#EE9D2B",
         ternary: "#6DB8DA",
+        fafafa: "#FAFAFA"
       },
       fontFamily: {
         "dm-sans": ["DM Sans", "sans-serif"],

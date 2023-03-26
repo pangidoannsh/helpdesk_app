@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import DashboardNavbar from '../dashboard/DashboardNavbar';
 import { LayoutProps } from './layout.interface';
 
 export default function Dashboard(props: LayoutProps) {
@@ -10,8 +11,9 @@ export default function Dashboard(props: LayoutProps) {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/bps.svg" />
             </Head>
-            <main>
-                {props.children}
+            <main className='bg-dashboard'>
+                <DashboardNavbar />
+                <div className='ml-[110px]'>{props.children}</div>
             </main>
         </>
     )
