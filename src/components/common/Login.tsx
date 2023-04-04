@@ -36,6 +36,8 @@ export default function Login(props: LoginProps) {
         closeAlert();
         api.post('/auth/login', credential).then(res => {
             Cookies.set('jwt', res.data.access_token, { expires: 7 });
+            console.log(res.data);
+
             setUser(res.data.user_data);
             setIsOpen(false);
             setAlert({
@@ -130,7 +132,7 @@ export default function Login(props: LoginProps) {
                                     <Link href="/call-center" className='hover:text-primary-500 
                                     text-xs font-open-sans text-slate-500'>Lupa Password?</Link>
                                     <Button loading={loadingSubmit}
-                                        className='bg-primary-600 py-2 rounded font-open-sans font-bold hover:bg-primary-700 text-white'>LOGIN</Button>
+                                        className='bg-primary-600 py-2 rounded-lg font-open-sans font-bold hover:bg-primary-700 text-white'>LOGIN</Button>
                                 </form>
                             </Dialog.Panel>
                         </Transition.Child>

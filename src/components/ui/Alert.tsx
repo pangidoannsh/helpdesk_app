@@ -44,7 +44,7 @@ function Alert(props: AlertProps) {
                             <div className={`w-full max-w-md transform overflow-hidden flex bg-${color}-100 rounded
                                 p-4 mb-4 text-${color}-700 items-center justify-between`}>
                                 <div className="flex gap-x-2 items-center">
-                                    <Icon icon={icon} className="text-2xl" />
+                                    <Icon icon={icon} className="text-3xl" />
                                     <div className='text-start'>
                                         <span className="font-medium">{title}: </span> {message}
                                     </div>

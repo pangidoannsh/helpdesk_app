@@ -14,9 +14,9 @@ export default function Input(props: InputProps) {
     return (
         <div className='relative flex flex-col gap-2'>
             {props.icon ?
-                <div className="absolute left-2 top-1/2 -translate-y-1/2">
+                <label htmlFor={props.tagId} className="absolute left-2 top-1/2 -translate-y-1/2">
                     <Icon icon={props.icon} className="text-xl text-slate-400" />
-                </div> : ''
+                </label> : ''
             }
             {props.label ?
                 <label htmlFor={props.tagId} className="text-slate-600 text-sm">{props.label}</label> : ''

@@ -8,9 +8,9 @@ interface ModalProps {
     title?: any;
     size?: string | ReactNode;
     children: ReactNode;
-    onFront?: any
+    rounded?: string;
 }
-const Modal = ({ isOpen, setIsOpen, title, size, children, onFront }: ModalProps) => {
+const Modal = ({ isOpen, setIsOpen, title, size, children, rounded }: ModalProps) => {
     function closeModal() {
         setIsOpen(false)
     }
@@ -42,15 +42,15 @@ const Modal = ({ isOpen, setIsOpen, title, size, children, onFront }: ModalProps
                                 leaveFrom="opacity-100 scale-100"
                                 leaveTo="opacity-0 scale-95"
                             >
-                                <Dialog.Panel className="rounded 
-                                 bg-white p-4 md:p-6 text-left align-middle shadow-xl transition-all"
+                                <Dialog.Panel className={`${rounded ?? "rounded"} 
+                                 bg-white p-6 md:p-8 text-left align-middle shadow-xl transition-all`}
                                     style={{ width: size ? `${size}px` : '100%' }}>
                                     {/* Title dari Modal */}
                                     {title ? (
                                         <div className="flex justify-between pb-6 divider-bottom mb-4">
                                             <div className='text-2xl text-slate-500'>{title}</div>
                                             <button onClick={closeModal}>
-                                                <Icon icon="carbon:close" className='text-[28px]' />
+                                                <Icon icon="carbon:close" className='text-[28px] text-slate-500' />
                                             </button>
                                         </div>
                                     ) : ''}

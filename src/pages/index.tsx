@@ -23,7 +23,7 @@ export default function Home() {
           <div className="flex justify-center sm:hidden">
             <Icon icon="mdi:customer-service" className="text-9xl text-primary-600" />
           </div>
-          <button className="px-9 py-3 uppercase rounded text-white bg-primary-500 hover:bg-primary-600 active:bg-primary-700
+          <button className="px-9 py-3 uppercase rounded-lg text-white bg-primary-500 hover:bg-primary-600 active:bg-primary-700
           focus:ring-4 focus:ring-sky-200  text-xl md:text-2xl" onClick={() => setIsOpenCreateTiket(true)}>
             pesan bantuan
           </button>
@@ -35,7 +35,7 @@ export default function Home() {
         </div>
       </div>
       <Footer />
-      <Modal isOpen={isOpenCreateTiket} setIsOpen={setIsOpenCreateTiket} title="Pesan Layanan Bantuan">
+      <Modal isOpen={isOpenCreateTiket} setIsOpen={setIsOpenCreateTiket} title="Pesan Layanan Bantuan" rounded="rounded-lg">
         <CreateTicket setIsOpen={setIsOpenCreateTiket} />
       </Modal>
     </CommonLayout>

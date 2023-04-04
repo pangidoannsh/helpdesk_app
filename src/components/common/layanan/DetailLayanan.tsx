@@ -1,5 +1,6 @@
+import Card from '@/components/Card';
 import { Button } from '@/components/ui/Button';
-import AuthApi from '@/services/authService';
+import AuthApi from '@/services/authApi';
 import { Icon } from '@iconify/react';
 import { useRouter } from 'next/router';
 import React, { useEffect, useRef, useState } from 'react'
@@ -44,7 +45,7 @@ export default function DetailLayanan({ detailLayanan, setDetailLayanan, loading
 
     return (
         <div className='w-full lg:block hidden' id='detail-section'>
-            <div className={`flex flex-col w-full p-4 md:p-6 justify-between shadow bg-white rounded gap-8
+            <Card className={`flex flex-col w-full p-4 md:p-6 rounded-lg gap-8
             ${detailLayanan ? "h-auto" : "h-screen"}`}>
                 {detailLayanan ?
                     !loadingDetail ? (
@@ -52,13 +53,13 @@ export default function DetailLayanan({ detailLayanan, setDetailLayanan, loading
                             <div className="flex flex-col gap-6">
                                 {/* Tab */}
                                 <div className="divider-bottom">
-                                    <button className={`rounded-t border-t border-x uppercase text-sm  p-2 translate-y-[1px]
+                                    <button className={`rounded-t-lg border-t border-x uppercase text-sm  p-2 translate-y-[1px]
                                 ${isGeneral ? "border-slate-400 text-slate-500 bg-white" :
                                             "border-transparent text-primary-700"}`}
                                         onClick={() => setisGeneral(true)}>
                                         general
                                     </button>
-                                    <button className={`rounded-t border-t border-x uppercase text-sm p-2 translate-y-[1px]
+                                    <button className={`rounded-t-lg border-t border-x uppercase text-sm p-2 translate-y-[1px]
                                 ${!isGeneral ? "border-slate-400 text-slate-500 bg-white" :
                                             "border-transparent text-primary-700"}`}
                                         onClick={() => setisGeneral(false)}>
@@ -123,13 +124,13 @@ export default function DetailLayanan({ detailLayanan, setDetailLayanan, loading
                             <ListMessage dataMessage={detailLayanan.message} inputMessageRef={messageRef}
                                 setIsGeneralTab={setisGeneral} />
                         </>
-                    ) : <div className="flex justify-center py-40">
-                        <Icon icon="eos-icons:loading" className='text-2xl' />
+                    ) : <div className="flex justify-center py-20">
+                        <Icon icon="eos-icons:loading" className='text-4xl text-primary-600' />
                     </div>
                     : <div className='mt-16 flex justify-center text-slate-600'>
                         Silahkan pilih daftar layanan untuk melihat detailnya
                     </div>}
-            </div>
+            </Card>
         </div>
 
     )

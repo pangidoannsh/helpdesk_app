@@ -20,7 +20,12 @@ module.exports = {
         },
         secondary: "#EE9D2B",
         ternary: "#6DB8DA",
-        fafafa: "#FAFAFA"
+        fafafa: "#FAFAFA",
+        f5: "#F5F5F5"
+
+      },
+      boxShadow: {
+        card: '0px 4px 12px rgba(0, 0, 0, 0.05);'
       },
       fontFamily: {
         "dm-sans": ["DM Sans", "sans-serif"],

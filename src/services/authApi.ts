@@ -17,4 +17,19 @@ export default class AuthApi {
             }
         })
     }
+
+    static put(url: string, payload: any) {
+        return api.put(url, payload, {
+            headers: {
+                Authorization: `Bearer ${Cookies.get('jwt')}`
+            }
+        });
+    }
+    static delete(url: string) {
+        return api.delete(url, {
+            headers: {
+                Authorization: `Bearer ${Cookies.get('jwt')}`
+            }
+        });
+    }
 }

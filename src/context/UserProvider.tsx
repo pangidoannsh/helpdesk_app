@@ -1,10 +1,11 @@
-import AuthApi from '@/services/authService';
+import AuthApi from '@/services/authApi';
 import React, { ReactNode, useEffect, useState } from 'react'
 
 interface User {
   id?: any;
   name?: string;
   level?: string;
+  fungsi?: string
 }
 interface UserContextProps {
   user: User,

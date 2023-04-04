@@ -33,8 +33,8 @@ export default function ListMessage({ dataMessage, inputMessageRef, setIsGeneral
     return (
         <div className='flex flex-col-reverse gap-4'>
             {dataMessage.length !== 0 ?
-                dataMessage.reverse().map((message, index) => (
-                    <div className={`flex rounded gap-6 py-4 px-6 border chat-entry
+                dataMessage.map((message, index) => (
+                    <div className={`flex rounded-lg gap-6 py-4 px-6 border chat-entry
                     ${message.userCreated.id === user.id ? 'border-primary-500' : 'border-gray-400'}`} key={index}>
                         <div className={`text-center ${message.userCreated.id === user.id ? "text-primary-600" : "text-slate-500"}`}>
                             <Icon icon={`${message.userCreated.id === user.id ? "ic:baseline-account-circle" : "mdi:customer-service"}`}
