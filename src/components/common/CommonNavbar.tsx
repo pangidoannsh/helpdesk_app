@@ -41,17 +41,23 @@ export default function CommonNavbar({ setOpenLoginModal, setLoadingPage }: Comm
                 </div> : ''
             }
             <div className="md:flex hidden gap-9 font-open-sans uppercase items-center text-primary-600">
-                <button >ABOUT</button>
-                <button onClick={() => handleClick("/faq")} className="uppercase">faq</button>
+                <button onClick={() => handleClick("/faq")}
+                    className={`${router.pathname === '/faq' ? 'font-semibold' : ''} uppercase`}>
+                    faq
+                </button>
                 {!user.id ?
                     <button onClick={() => setOpenLoginModal(true)}
                         className='py-2 px-4 common-button uppercase'>
                         login
                     </button>
                     : <>
-                        <button onClick={() => handleClick('/layanan')}
+                        <button onClick={() => handleClick('/create-ticket')}
                             className={`${router.pathname.includes('/layanan') ? 'font-semibold' : ''} uppercase`}>
-                            layanan
+                            Buat Tiket
+                        </button>
+                        <button onClick={() => handleClick('/ticket')}
+                            className={`${router.pathname.includes('/ticket') ? 'font-semibold' : ''} uppercase`}>
+                            Lihat Tiket
                         </button>
                         {(user.level === 'agent' || user.level === 'supervisor') ?
                             <button onClick={() => handleClick("/dashboard/ticket")} className="uppercase">

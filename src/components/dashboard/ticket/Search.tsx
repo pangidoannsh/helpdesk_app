@@ -1,5 +1,5 @@
-import Card from '@/components/Card'
-import { Button } from '@/components/ui/Button';
+import Card from '@/components/ui/Card'
+import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input'
 import Select from '@/components/ui/Select';
 import { api } from '@/config/api';
@@ -24,6 +24,7 @@ interface SearchProps {
     refrence?: RefObject<HTMLDivElement>;
     border?: string;
     functionSearch: (query: string) => void;
+    className?: string;
     withoutFungsi?: boolean;
 }
 export default function Search(props: SearchProps) {
@@ -61,14 +62,14 @@ export default function Search(props: SearchProps) {
         if (!props.withoutFungsi) {
             api.get('/fungsi').then(res => {
                 setfungsiOptions([{ value: null, display: "Semua Fungsi" },
-                ...res.data.map((data: any) => ({ value: data.id, display: data.name.toUpperCase() }))]);
+                ...res.data.map((data: any) => ({ value: data.name, display: data.name.toUpperCase() }))]);
             })
         }
     }, []);
 
     return (
-        <Card className={`${border}`} refrence={props.refrence}>
-            <form action="" className='flex flex-col gap-6 p-9'>
+        <Card className={`${border} ${props.className}`} refrence={props.refrence}>
+            <form action="" className='flex flex-col gap-6 p-6 lg:p-9'>
                 <h5 className='text-xl text-primary-600'>PENCARIAN</h5>
                 {!props.withoutFungsi ? <>
                     <div className="grid grid-cols-2 gap-6">
@@ -88,7 +89,7 @@ export default function Search(props: SearchProps) {
                     <Button onClick={handleSearch} loading={searchLoading}
                         className={`${border} text-white py-2 px-6`}>CARI</Button>
                 </> : <>
-                    <div className="grid grid-cols-5 gap-2">
+                    <div className="flex flex-col sm:grid sm:grid-cols-2 lg:grid-cols-5 gap-x-2 gap-y-4">
                         <Input inputRef={subjectRef} icon="ic:baseline-search" placeholder='Semua Subjek' className={`${border} text-sm`}
                             tagId='subject-input' />
                         <Select useSelect={[categoryInput, setCategoryInput]} icon="bxs:category" className={`${border}`}
@@ -98,7 +99,7 @@ export default function Search(props: SearchProps) {
                         <Select useSelect={[priorityInput, setPriorityInput]} icon="material-symbols:priority" className={`${border}`}
                             options={priorityOptions} />
                         <Button onClick={handleSearch} loading={searchLoading}
-                            className={`${border} text-white py-2 px-6`}>CARI</Button>
+                            className={`${border} text-white items-center px-6 col-span-2 lg:col-span-1 py-2`}>CARI</Button>
                     </div>
                 </>}
             </form>

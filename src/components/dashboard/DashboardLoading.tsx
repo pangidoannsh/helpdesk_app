@@ -1,6 +1,6 @@
 import { Icon } from '@iconify/react'
 import React from 'react'
-import Card from '../Card'
+import Card from '../ui/Card'
 
 export default function DashboardLoading() {
     return (

@@ -7,7 +7,7 @@ import Cookies from 'js-cookie';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Fragment, useContext, useRef, useState } from 'react';
-import { Button } from '../ui/Button';
+import Button from '../ui/Button';
 
 interface LoginProps {
     isOpen: boolean;
@@ -48,7 +48,7 @@ export default function Login(props: LoginProps) {
             });
             setTimeout(() => {
                 closeAlert();
-            }, 3000);
+            }, 2000);
         }).catch(err => {
             console.log(err);
             setAlert({
@@ -78,7 +78,7 @@ export default function Login(props: LoginProps) {
                 </Transition.Child>
 
                 <div className="fixed inset-0 overflow-y-auto" id='modal'>
-                    <div className="flex justify-center px-12 py-4 text-center items-center min-h-full">
+                    <div className="flex justify-center px-4 sm:px-12 py-4 text-center items-center min-h-full">
                         <Transition.Child
                             as={Fragment}
                             enter="ease-out duration-300"
@@ -89,7 +89,7 @@ export default function Login(props: LoginProps) {
                             leaveTo="opacity-0 scale-95"
                         >
                             <Dialog.Panel className="rounded flex flex-col gap-12
-                                 bg-white p-6 text-left align-middle shadow-xl transition-all sm:w-[450px]">
+                                 bg-white p-6 text-left align-middle shadow-xl transition-all w-full sm:w-[450px]">
                                 {/* Title dari Modal */}
                                 <div className="flex justify-between items-start">
                                     <LoginLogo />

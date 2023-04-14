@@ -9,12 +9,16 @@ interface SelectProps {
     className?: string;
     icon?: string;
     width?: string;
+    catchSelect?: (catches: any) => void
 }
-const Select = ({ label, options = [], useSelect, icon, className, width }: SelectProps) => {
+const Select = ({ label, options = [], useSelect, icon, className, width, catchSelect }: SelectProps) => {
 
     const [selected, setSelected] = useSelect;
 
     function handleSelect(select: any) {
+        if (catchSelect) {
+            catchSelect(select);
+        }
         setSelected(select);
     }
     return (
@@ -24,7 +28,7 @@ const Select = ({ label, options = [], useSelect, icon, className, width }: Sele
                 <div className="relative">
                     <Listbox.Button className={`relative w-full ${className} bg-white py-2 pr-4 pl-2 
                     ${selected.value === null ? 'text-slate-400' : 'text-primary-600'} 
-                     text-left border border-slate-300 focus:outline-none sm:text-sm`} >
+                     text-left border border-slate-300 focus:outline-none text-sm`} >
                         {icon ? <span className='absolute top-1/2 -translate-y-1/2'>
                             <Icon icon={icon} className={`text-xl`} />
 

@@ -1,19 +1,24 @@
-import Card from '@/components/Card';
+import Card from '@/components/ui/Card';
 import { useRouter } from 'next/router';
 import React from 'react'
 
 interface ListLayananProps {
     datas: Array<any>;
     refSection: any;
+    className?: string;
 }
-export default function ListLayanan({ datas, refSection }: ListLayananProps) {
+export default function ListLayanan({ datas, refSection, className }: ListLayananProps) {
     const router = useRouter();
     function handleClick(detail: any) {
-        router.push(`/layanan?slug=${detail.slug}`, `/layanan/${detail.slug}`, { shallow: true });
+        if (window.innerWidth >= 1024) {
+            router.push(`/ticket?slug=${detail.slug}`, `/ticket/${detail.slug}`, { shallow: true });
+        } else {
+            router.push(`/ticket/${detail.slug}`);
+        }
         refSection.current.scrollIntoView({ behavior: 'smooth' });
     }
     return (
-        <div className="w-full lg:w-[35%] flex flex-col gap-4">
+        <div className={`w-full lg:w-[35%] flex flex-col gap-4 ${className}`}>
             {datas.length !== 0 ?
                 datas.map((data, index) => (
                     <button

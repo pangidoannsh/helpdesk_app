@@ -10,7 +10,7 @@ export default function Home() {
   const [isOpenCreateTiket, setIsOpenCreateTiket] = useState(false);
 
   return (
-    <CommonLayout title="Helpdesk IT | BPS Riau" >
+    <CommonLayout title="Helpdesk IT BPS Riau" >
       <div className="relative px-6 sm:px-12 py-12 lg:py-24 xl:py-32 overflow-hidden">
         <div className="flex flex-col gap-6 lg:w-[470px] lg:text-start text-center">
           <div className="flex flex-col gap-3">
@@ -20,7 +20,7 @@ export default function Home() {
           <p className="text-slate-600 text-xl md:text-2xl font-open-sans">
             System pusat bantuan BPS Riau untuk memudahkan pelaporan dan pengolahan dokumentasi bantuan
           </p>
-          <div className="flex justify-center sm:hidden">
+          <div className="flex justify-center lg:hidden">
             <Icon icon="mdi:customer-service" className="text-9xl text-primary-600" />
           </div>
           <button className="px-9 py-3 uppercase rounded-lg text-white bg-primary-500 hover:bg-primary-600 active:bg-primary-700

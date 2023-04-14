@@ -1,11 +1,15 @@
-import Card from "@/components/Card";
+import Card from "@/components/ui/Card";
 import TextArea from "@/components/common/TextArea";
-import { Button } from "@/components/ui/Button";
+import Button from "@/components/ui/Button";
 import SelectNoBorder from "@/components/ui/SelectNoBorder";
+import BASE_URL from "@/config/baseUrl";
+import { UserContext } from "@/context/UserProvider";
 import AuthApi from "@/services/authApi";
-import { RefObject, useState } from "react";
+import { RefObject, useContext, useState } from "react";
+import { io } from "socket.io-client";
 
 const nullResponse = { value: null, display: "Balas Pesan Dengan Cepat" };
+const socket = io(BASE_URL);
 
 interface DetailHeaderProps {
     isGeneral: boolean;
@@ -16,6 +20,7 @@ interface DetailHeaderProps {
     responsesOptions?: Array<any>;
 }
 export default function DetailHeader(props: DetailHeaderProps) {
+    const { user } = useContext(UserContext)
     const { isGeneral, setIsGeneral, detail, messageRef, setDataMessage, responsesOptions } = props;
     const [fastReply, setFastReply] = useState(nullResponse);
     const [loadingSend, setloadingSend] = useState(false);
@@ -30,13 +35,15 @@ export default function DetailHeader(props: DetailHeaderProps) {
 
     const handleSend = (event: any) => {
         const dataPost = {
+            // userSend: user.id,
             ticketId: detail.id,
             content: messageRef.current?.value.replaceAll("\n", "<br/>")
         }
+        // socket.emit('sendMessage', dataPost)
         // console.log(dataPost);
         setloadingSend(true)
         AuthApi.post('/ticket-message', dataPost).then(res => {
-            setDataMessage((prev: any) => [...prev, res.data]);
+            // setDataMessage((prev: any) => [...prev, res.data]);
             messageRef.current ? messageRef.current.value = "" : ''
         }).catch(err => {
             console.log(err.response);

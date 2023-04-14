@@ -1,4 +1,4 @@
-import Card from '@/components/Card'
+import Card from '@/components/ui/Card'
 import Converter from '@/utils/converter';
 import { Icon } from '@iconify/react';
 
@@ -11,7 +11,7 @@ export default function UserResponse(props: ResponseProps) {
     const { content, userName, createdAt } = props;
 
     return (
-        <Card className='flex gap-14 py-6 px-12 rounded chat-dashboard'>
+        <Card className='flex gap-14 py-6 px-12 rounded chat-entry'>
             <div className='flex flex-col items-center text-primary-600 w-40 truncate'>
                 <Icon icon="ic:baseline-account-circle"
                     className="text-9xl" />

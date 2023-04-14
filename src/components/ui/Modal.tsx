@@ -9,8 +9,9 @@ interface ModalProps {
     size?: string | ReactNode;
     children: ReactNode;
     rounded?: string;
+    className?: string;
 }
-const Modal = ({ isOpen, setIsOpen, title, size, children, rounded }: ModalProps) => {
+const Modal = ({ isOpen, setIsOpen, title, size, children, rounded, className }: ModalProps) => {
     function closeModal() {
         setIsOpen(false)
     }
@@ -43,7 +44,8 @@ const Modal = ({ isOpen, setIsOpen, title, size, children, rounded }: ModalProps
                                 leaveTo="opacity-0 scale-95"
                             >
                                 <Dialog.Panel className={`${rounded ?? "rounded"} 
-                                 bg-white p-6 md:p-8 text-left align-middle shadow-xl transition-all`}
+                                 bg-white text-left align-middle shadow-xl transition-all
+                                 ${className ? className : 'p-6 md:p-8'}`}
                                     style={{ width: size ? `${size}px` : '100%' }}>
                                     {/* Title dari Modal */}
                                     {title ? (

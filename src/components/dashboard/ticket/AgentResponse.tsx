@@ -1,4 +1,4 @@
-import Card from '@/components/Card';
+import Card from '@/components/ui/Card';
 import Converter from '@/utils/converter';
 import { Icon } from '@iconify/react';
 
@@ -10,7 +10,7 @@ interface ResponseProps {
 export default function AgentResponse(props: ResponseProps) {
     const { content, userName, createdAt } = props;
     return (
-        <Card className='flex gap-14 py-6 px-12 border border-primary-600 rounded chat-dashboard' backgroundColor='bg-f5'>
+        <Card className='flex gap-14 py-6 px-12 border border-primary-600 rounded chat-entry' backgroundColor='bg-f5'>
             <div className="flex flex-col items-center text-primary-700 w-40 truncate">
                 <Icon icon="mdi:customer-service"
                     className="text-9xl" />

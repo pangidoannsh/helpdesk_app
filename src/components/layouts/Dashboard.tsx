@@ -2,7 +2,7 @@ import Head from 'next/head';
 import React, { useState } from 'react';
 import DashboardNavbar from '../dashboard/DashboardNavbar';
 import Header from '../dashboard/Header';
-import LoadingPage from '../LoadingPage';
+import LoadingPage from '../ui/LoadingPage';
 import { LayoutProps } from './layout.interface';
 
 export default function DashboardLayout(props: LayoutProps) {

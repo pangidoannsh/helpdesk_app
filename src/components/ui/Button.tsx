@@ -6,7 +6,7 @@ interface ButtonPrimaryProps {
     loading?: boolean;
     onClick?: (event: any) => void;
 }
-export function Button({ className, children, loading, onClick }: ButtonPrimaryProps) {
+export default function Button({ className, children, loading, onClick }: ButtonPrimaryProps) {
     return (
         <button onClick={onClick}
             className={`flex justify-center bg-primary-600 hover:bg-primary-700 ${className}`}>

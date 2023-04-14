@@ -1,37 +1,47 @@
-import Card from '@/components/Card';
-import { Button } from '@/components/ui/Button';
+import Card from '@/components/ui/Card';
+import Button from '@/components/ui/Button';
 import AuthApi from '@/services/authApi';
 import { Icon } from '@iconify/react';
 import { useRouter } from 'next/router';
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import TextArea from '../TextArea'
 import ListMessage from './ListMessage';
+import io from 'socket.io-client';
+import BASE_URL from '@/config/baseUrl';
+import { UserContext } from '@/context/UserProvider';
+
+
+const socket = io(BASE_URL);
 
 interface DetailLayananProps {
     detailLayanan?: any;
-    setDetailLayanan?: any;
+    listMessages?: Array<any>;
+    setListMessages?: (listMessage: any) => void;
     loadingDetail: boolean;
+    isOpenDetail: boolean;
 }
 
-export default function DetailLayanan({ detailLayanan, setDetailLayanan, loadingDetail }: DetailLayananProps) {
+export default function DetailLayanan({ detailLayanan, listMessages = [],
+    loadingDetail, setListMessages = () => { }, isOpenDetail }: DetailLayananProps) {
     const { slug } = useRouter().query;
+
     const [isGeneral, setisGeneral] = useState(true);
     const [loadingSend, setloadingSend] = useState(false);
     const messageRef = useRef<HTMLTextAreaElement>(null);
+
     const handleSend = (event: any) => {
         const dataPost = {
+            // userSend: user.id,
             ticketId: detailLayanan.id,
             content: messageRef.current?.value.replaceAll("\n", "<br/>")
         }
         // console.log(dataPost);
         setloadingSend(true)
+        // socket.emit('sendMessage', dataPost);
         AuthApi.post('/ticket-message', dataPost).then(res => {
-            console.log(res.data);
+            // console.log(res.data);
 
-            setDetailLayanan({
-                ...detailLayanan,
-                message: [...detailLayanan.message, res.data]
-            })
+            // setListMessages((prev: any) => [...prev, res.data])
             messageRef.current ? messageRef.current.value = "" : ''
         }).catch(err => {
             console.log(err.response);
@@ -43,8 +53,24 @@ export default function DetailLayanan({ detailLayanan, setDetailLayanan, loading
         if (messageRef.current) messageRef.current.value = '';
     }, [slug])
 
+    useEffect(() => {
+        socket.on("receiveMessage", data => {
+            if (setListMessages) {
+                console.log('data', data);
+                if (detailLayanan) {
+                    if (data.ticket.id === detailLayanan.id) {
+                        setListMessages((prev: Array<any>) => [...prev, data])
+                    }
+                }
+            }
+        })
+        return () => {
+            socket.off('receiveMessage')
+        }
+    }, [detailLayanan])
+
     return (
-        <div className='w-full lg:block hidden' id='detail-section'>
+        <div className={`w-full ${!isOpenDetail ? 'hidden lg:block' : ''}`} id='detail-section'>
             <Card className={`flex flex-col w-full p-4 md:p-6 rounded-lg gap-8
             ${detailLayanan ? "h-auto" : "h-screen"}`}>
                 {detailLayanan ?
@@ -88,7 +114,7 @@ export default function DetailLayanan({ detailLayanan, setDetailLayanan, loading
                             </div>
                             {isGeneral ? (
                                 <>
-                                    <div className='flex gap-12'>
+                                    <div className='flex md:flex-row flex-col gap-4 md:gap-12'>
                                         <div className="text-sm">
                                             <div className='text-slate-500'>Fungsi</div>
                                             <div className='text-slate-800'>Kepegawaian</div>
@@ -121,7 +147,7 @@ export default function DetailLayanan({ detailLayanan, setDetailLayanan, loading
                                     </div>
                                 </>)
                             }
-                            <ListMessage dataMessage={detailLayanan.message} inputMessageRef={messageRef}
+                            <ListMessage dataMessage={listMessages} inputMessageRef={messageRef}
                                 setIsGeneralTab={setisGeneral} />
                         </>
                     ) : <div className="flex justify-center py-20">

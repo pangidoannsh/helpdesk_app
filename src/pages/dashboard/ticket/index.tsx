@@ -1,11 +1,17 @@
-import Card from '@/components/Card';
+import Card from '@/components/ui/Card';
 import Table from '@/components/dashboard/Table';
 import TablePagination from '@/components/dashboard/TablePagination';
 import Search from '@/components/dashboard/ticket/Search'
 import DashboardLayout from '@/components/layouts/Dashboard';
+import { api } from '@/config/api';
 import AuthApi from '@/services/authApi';
 import Link from 'next/link';
+import { parseCookies } from 'nookies';
 import React, { useEffect, useState } from 'react'
+
+interface TicketPageProps {
+    dataTicket: Array<any>
+}
 
 const columnTable = [
     { header: 'id tiket', field: 'idTicket' },
@@ -36,33 +42,35 @@ const displayData = (data: any) => {
         </div>
     }
 }
-export default function Ticket() {
-    const [ticketData, setTicketData] = useState<any>([]);
+export default function Ticket(props: TicketPageProps) {
+    const [ticketData, setTicketData] = useState(props.dataTicket.map((data: any) => displayData(data)));
     const [totalPage, settotalPage] = useState(1);
     const [currentPage, setcurrentPage] = useState(1);
     const [loadingTable, setloadingTable] = useState(true);
 
     function handleSearch(query: string) {
+        setloadingTable(true);
         AuthApi.get(`/ticket?${query}`).then(res => {
             console.log(res.data);
             setTicketData(res.data.map((data: any) => displayData(data)))
         }).catch(err => {
             console.log(err.response);
-        })
-    }
-    useEffect(() => {
-        AuthApi.get('/ticket').then(res => {
-            setTicketData(res.data.map((data: any) => displayData(data)))
-        }).catch(err => {
-            console.log(err.response);
         }).finally(() => setloadingTable(false))
-    }, [])
+    }
+
+    // useEffect(() => {
+    //     AuthApi.get('/ticket').then(res => {
+    //         setTicketData(res.data.map((data: any) => displayData(data)))
+    //     }).catch(err => {
+    //         console.log(err.response);
+    //     }).finally(() => setloadingTable(false))
+    // }, [])
 
     return (
         <DashboardLayout title='Tiket | Helpdesk Dashboard'>
             <Search border='rounded' functionSearch={handleSearch} />
             <Card className='flex flex-col p-9 gap-6 rounded'>
-                <Table column={columnTable} dataBody={ticketData} loading={loadingTable} emptyDataMessage="Tiket Kosong" />
+                <Table column={columnTable} dataBody={ticketData} emptyDataMessage="Tiket Kosong" />
                 <div className="flex justify-between items-center">
                     <span className='text-slate-500 text-sm'>menampilkan {ticketData.length} dari {ticketData.length}</span>
                     <TablePagination totalPage={totalPage} currentPage={currentPage} />
@@ -70,4 +78,31 @@ export default function Ticket() {
             </Card>
         </DashboardLayout>
     )
+}
+
+export async function getServerSideProps(context: any) {
+    const token = parseCookies(context).jwt;
+    if (!token) {
+        return {
+            redirect: {
+                destination: "/403",
+                permanent: false,
+            },
+        };
+    }
+
+    let dataTicket: any = [];
+    await api.get("/ticket", {
+        headers: { Authorization: `Bearer ${token}` }
+    }).then(res => {
+        dataTicket = res.data
+    }).catch(err => {
+
+    })
+
+    return {
+        props: {
+            dataTicket: dataTicket ? dataTicket : []
+        }
+    }
 }

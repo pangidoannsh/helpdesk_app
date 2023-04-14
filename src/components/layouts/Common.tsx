@@ -2,12 +2,12 @@ import CommonNavbar from '@/components/common/CommonNavbar';
 import Login from '@/components/common/Login';
 import Head from 'next/head';
 import { useState } from 'react';
-import LoadingPage from '../LoadingPage';
+import LoadingPage from '../ui/LoadingPage';
 import { LayoutProps } from './layout.interface';
 
 export default function CommonLayout(props: LayoutProps) {
     const [isOpenLogin, setIsOpenLogin] = useState(false);
-    const [loadingPage, setLoadingPage] = useState(true);
+    const [loadingPage, setLoadingPage] = useState(false);
     return (
         <>
             <Head>

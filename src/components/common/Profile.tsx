@@ -28,7 +28,7 @@ export default function Profile() {
         <div className='relative'>
             <button className='flex gap-2 items-center text-primary-600' onClick={() => setDrop(prev => !prev)}>
                 <Icon icon="ic:baseline-account-circle" className='text-4xl' />
-                <span className='uppercase sm:inline hidden'>Hello, {user.name?.split(" ")[0]}!</span>
+                <span className='uppercase lg:inline hidden'>Hello, {user.name?.split(" ")[0]}!</span>
             </button>
             {drop ?
                 <div className="profile-drop shadow text-sm">

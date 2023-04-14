@@ -3,9 +3,13 @@ import AgentResponse from '@/components/dashboard/ticket/AgentResponse';
 import DetailHeader from '@/components/dashboard/ticket/DetailHeader';
 import UserResponse from '@/components/dashboard/ticket/UserResponse';
 import DashboardLayout from '@/components/layouts/Dashboard';
+import BASE_URL from '@/config/baseUrl';
 import AuthApi from '@/services/authApi';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react'
+import { io } from 'socket.io-client';
+
+const socket = io(BASE_URL);
 
 export default function TicketDetail() {
     const router = useRouter();
@@ -32,6 +36,7 @@ export default function TicketDetail() {
             })
         }
     }, [id])
+
     useEffect(() => {
         AuthApi.get('/responses').then(res => {
             setResponseOptions(res.data.map((data: any) => ({ value: data.text, display: data.text })))
@@ -39,6 +44,22 @@ export default function TicketDetail() {
             console.log(err.response);
         })
     }, [])
+    useEffect(() => {
+        socket.on("receiveMessage", data => {
+            if (setDataMessages) {
+                console.log(data);
+                // console.log(id);
+
+                if (data.ticket.id === id) {
+                    setDataMessages((prev: Array<any>) => [...prev, data])
+                }
+            }
+        })
+        return () => {
+            socket.off('receiveMessage')
+        }
+    }, [])
+
     return (
         <DashboardLayout title='Tiket | Helpdesk Dashboard'>
             {loadingPage ? <DashboardLoading /> : <>

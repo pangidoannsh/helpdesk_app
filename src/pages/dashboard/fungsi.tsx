@@ -1,28 +1,34 @@
-import Card from '@/components/Card'
+import Card from '@/components/ui/Card'
 import Table from '@/components/dashboard/Table'
 import DashboardLayout from '@/components/layouts/Dashboard'
-import { Button } from '@/components/ui/Button'
+import Button from '@/components/ui/Button'
 import Modal from '@/components/ui/Modal'
+import { api } from '@/config/api'
 import { AlertContext } from '@/context/AlertProvider'
 import AuthApi from '@/services/authApi'
 import { Icon } from '@iconify/react'
 import { useRouter } from 'next/router'
+import { parseCookies } from 'nookies'
 import { useContext, useEffect, useRef, useState } from 'react'
 
+interface FungsiPageProps {
+    dataFungsi: Array<any>
+}
 const columnTable = [
     { field: "name", header: "Nama Fungsi", className: "p-4 text-slate-600 border-b uppercase" },
     { field: "action", header: "#", width: "130px", align: 'center' },
 ]
-export default function FungsiPage() {
+
+export default function FungsiPage(props: FungsiPageProps) {
     const router = useRouter();
     const { setAlert, closeAlert } = useContext(AlertContext)
 
-    const [dataFungsi, setDataFungsi] = useState<any>([]);
+    const [dataFungsi, setDataFungsi] = useState(props.dataFungsi.map((data: any) => displayData(data)));
     const [dataEdit, setDataEdit] = useState<any>();
     const [dataDelete, setDataDelete] = useState<any>();
 
     const [isEdit, setIsEdit] = useState(false);
-    const [loadingTable, setLoadingTable] = useState(true);
+    // const [loadingTable, setLoadingTable] = useState(true);
     const [loadingCreate, setLoadingCreate] = useState(false);
     const [openModalDelete, setopenModalDelete] = useState(false);
 
@@ -145,20 +151,19 @@ export default function FungsiPage() {
             })
         }).finally(() => setTimeout(() => closeAlert(), 3000))
     }
-    useEffect(() => {
-        AuthApi.get('/fungsi').then(res => {
-            setDataFungsi(res.data.map((data: any) => displayData(data)));
-        }).catch(err => {
-            console.log(err.response);
-        }).finally(() => setLoadingTable(false))
-    }, []);
+    // useEffect(() => {
+    //     AuthApi.get('/fungsi').then(res => {
+    //         setDataFungsi(res.data.map((data: any) => displayData(data)));
+    //     }).catch(err => {
+    //         console.log(err.response);
+    //     }).finally(() => setLoadingTable(false))
+    // }, []);
 
     return (
-        <DashboardLayout title='Responses Template | Helpdesk IT'>
+        <DashboardLayout title='Fungsi | Helpdesk IT'>
             <Card className='rounded p-9 flex flex-col gap-6'>
                 <h3 className='text-xl font-medium text-primary-700 uppercase'>Daftar Fungsi</h3>
-                <Table dataBody={dataFungsi} column={columnTable} emptyDataMessage="Belum Ada Data Fungsi Tersimpan"
-                    loading={loadingTable} />
+                <Table dataBody={dataFungsi} column={columnTable} emptyDataMessage="Belum Ada Data Fungsi Tersimpan" />
                 {!isEdit ? <form onSubmit={handleCreate} className="flex gap-4">
                     <input type="text" placeholder='Tambah Respon Baru' className='w-1/2 focus:outline-none border
                      border-slate-300 px-3 py-2 rounded text-sm text-slate-600' ref={inputNameRef} />
@@ -195,4 +200,32 @@ export default function FungsiPage() {
             </Modal>
         </DashboardLayout>
     )
+}
+
+
+export async function getServerSideProps(context: any) {
+    const token = parseCookies(context).jwt;
+    if (!token) {
+        return {
+            redirect: {
+                destination: "/403",
+                permanent: false,
+            },
+        };
+    }
+
+    let dataFungsi: any = [];
+    await api.get("/fungsi", {
+        headers: { Authorization: `Bearer ${token}` }
+    }).then(res => {
+        dataFungsi = res.data
+    }).catch(err => {
+
+    })
+
+    return {
+        props: {
+            dataFungsi: dataFungsi ? dataFungsi : []
+        }
+    }
 }

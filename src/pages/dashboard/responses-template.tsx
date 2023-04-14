@@ -1,21 +1,26 @@
-import Card from '@/components/Card'
+import Card from '@/components/ui/Card'
 import Table from '@/components/dashboard/Table'
 import DashboardLayout from '@/components/layouts/Dashboard'
-import { Button } from '@/components/ui/Button'
+import Button from '@/components/ui/Button'
 import Modal from '@/components/ui/Modal'
+import { api } from '@/config/api'
 import { AlertContext } from '@/context/AlertProvider'
 import AuthApi from '@/services/authApi'
 import { Icon } from '@iconify/react'
+import { parseCookies } from 'nookies'
 import { useContext, useEffect, useRef, useState } from 'react'
 
+interface ResponsesProps {
+    dataResponses: Array<any>
+}
 const columnTable = [
     { field: "text", header: "Isi Respon", className: "p-4 text-slate-600 border-b" },
     { field: "action", header: "#", width: "130px", align: 'center' },
 ]
-export default function ResponsesTemplate() {
+export default function ResponsesTemplate(props: ResponsesProps) {
     const { setAlert, closeAlert } = useContext(AlertContext);
 
-    const [dataResponse, setDataResponse] = useState<any>([]);
+    const [dataResponse, setDataResponse] = useState(props.dataResponses.map((data: any) => displayData(data)));
     const [dataEdit, setDataEdit] = useState<any>();
     const [isEdit, setisEdit] = useState(false);
 
@@ -114,20 +119,19 @@ export default function ResponsesTemplate() {
         setDataDelete(null);
         setopenModalDelete(false)
     }
-    useEffect(() => {
-        AuthApi.get('/responses').then(res => {
-            setDataResponse(res.data.map((data: any) => displayData(data)));
-        }).catch(err => {
-            console.log(err.response);
-        }).finally(() => setLoadingTable(false))
-    }, []);
+    // useEffect(() => {
+    //     AuthApi.get('/responses').then(res => {
+    //         setDataResponse(res.data.map((data: any) => displayData(data)));
+    //     }).catch(err => {
+    //         console.log(err.response);
+    //     }).finally(() => setLoadingTable(false))
+    // }, []);
 
     return (
         <DashboardLayout title='Responses Template | Helpdesk IT'>
             <Card className='rounded p-9 flex flex-col gap-6'>
                 <h3 className='text-xl font-medium text-primary-700 uppercase'>Daftar Respon Cepat</h3>
-                <Table dataBody={dataResponse} column={columnTable} emptyDataMessage="Belum Ada Data Fungsi Tersimpan"
-                    loading={loadingTable} />
+                <Table dataBody={dataResponse} column={columnTable} emptyDataMessage="Belum Ada Data Fungsi Tersimpan" />
                 {!isEdit ?
                     <form onSubmit={handleCreate} className="flex gap-4">
                         <input type="text" placeholder='Tambah Respon Baru' className='w-1/2 focus:outline-none border
@@ -166,4 +170,31 @@ export default function ResponsesTemplate() {
             </Modal>
         </DashboardLayout>
     )
+}
+
+export async function getServerSideProps(context: any) {
+    const token = parseCookies(context).jwt;
+    if (!token) {
+        return {
+            redirect: {
+                destination: "/403",
+                permanent: false,
+            },
+        };
+    }
+
+    let dataResponses: any = [];
+    await api.get("/responses", {
+        headers: { Authorization: `Bearer ${token}` }
+    }).then(res => {
+        dataResponses = res.data
+    }).catch(err => {
+
+    })
+
+    return {
+        props: {
+            dataResponses: dataResponses ? dataResponses : []
+        }
+    }
 }

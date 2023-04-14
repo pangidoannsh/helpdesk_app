@@ -4,16 +4,8 @@ import MessageManager from '@/utils/messageManager';
 import { Icon } from '@iconify/react';
 import React, { RefObject, useContext } from 'react';
 
-interface Message {
-    userCreated: {
-        id: string;
-        name: string;
-    };
-    content: string;
-    createdAt: string;
-}
 interface ListMessageProps {
-    dataMessage: Array<Message>,
+    dataMessage: Array<any>,
     inputMessageRef: RefObject<HTMLTextAreaElement>;
     setIsGeneralTab: (isGeneral: boolean) => void;
     // setInputMessage: (message: string) => void;
