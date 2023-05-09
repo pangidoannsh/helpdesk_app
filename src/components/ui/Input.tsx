@@ -9,6 +9,7 @@ interface InputProps {
     inputRef: RefObject<HTMLInputElement>;
     placeholder?: string;
     icon?: string;
+    defaultValue?: any;
 }
 export default function Input(props: InputProps) {
     return (
@@ -21,7 +22,7 @@ export default function Input(props: InputProps) {
             {props.label ?
                 <label htmlFor={props.tagId} className="text-slate-600 text-sm">{props.label}</label> : ''
             }
-            <input ref={props.inputRef} id={props.tagId}
+            <input ref={props.inputRef} id={props.tagId} defaultValue={props.defaultValue}
                 type={props.type ? props.type : "text"} className={`p-2 ${props.icon ? "pl-8" : ''}
                  text-slate-500 border focus:outline-none border-slate-300 ${props.className}`}
                 placeholder={props.placeholder ? props.placeholder : ''} />

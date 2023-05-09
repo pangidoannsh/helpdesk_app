@@ -17,7 +17,9 @@ export default function CommonNavbar({ setOpenLoginModal, setLoadingPage }: Comm
     const { user, setUser } = useContext(UserContext);
 
     function handleClick(path: string) {
-        setLoadingPage(router.pathname !== path)
+        setTimeout(() => {
+            setLoadingPage(router.pathname !== path)
+        }, 100);
         router.push(path);
     }
     return (
@@ -60,7 +62,7 @@ export default function CommonNavbar({ setOpenLoginModal, setLoadingPage }: Comm
                             Lihat Tiket
                         </button>
                         {(user.level === 'agent' || user.level === 'supervisor') ?
-                            <button onClick={() => handleClick("/dashboard/ticket")} className="uppercase">
+                            <button onClick={() => handleClick("/dashboard")} className="uppercase">
                                 Dashboard
                             </button> : ''}
                     </>

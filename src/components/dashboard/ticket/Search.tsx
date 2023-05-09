@@ -44,7 +44,7 @@ export default function Search(props: SearchProps) {
     const handleSearch = (e: any) => {
         e.preventDefault();
         let query: string = "";
-        if (subjectRef.current?.value) query += `subject=${subjectRef.current.value}&`;//.replaceAll(" ", "%")
+        if (subjectRef.current?.value) query += `subject=${subjectRef.current.value}&`;
         if (categoryInput.value) query += `category=${categoryInput.value}&`;
         if (statusInput.value) query += `status=${statusInput.value}&`;
         if (priorityInput.value) query += `priority=${priorityInput.value}&`;
@@ -62,7 +62,7 @@ export default function Search(props: SearchProps) {
         if (!props.withoutFungsi) {
             api.get('/fungsi').then(res => {
                 setfungsiOptions([{ value: null, display: "Semua Fungsi" },
-                ...res.data.map((data: any) => ({ value: data.name, display: data.name.toUpperCase() }))]);
+                ...res.data.map((data: any) => ({ value: data.id, display: data.name.toUpperCase() }))]);
             })
         }
     }, []);

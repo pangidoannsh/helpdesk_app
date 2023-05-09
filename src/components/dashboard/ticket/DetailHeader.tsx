@@ -35,7 +35,6 @@ export default function DetailHeader(props: DetailHeaderProps) {
 
     const handleSend = (event: any) => {
         const dataPost = {
-            // userSend: user.id,
             ticketId: detail.id,
             content: messageRef.current?.value.replaceAll("\n", "<br/>")
         }
@@ -44,7 +43,9 @@ export default function DetailHeader(props: DetailHeaderProps) {
         setloadingSend(true)
         AuthApi.post('/ticket-message', dataPost).then(res => {
             // setDataMessage((prev: any) => [...prev, res.data]);
-            messageRef.current ? messageRef.current.value = "" : ''
+            messageRef.current ? messageRef.current.value = "" : '';
+            setFastReply(nullResponse);
+
         }).catch(err => {
             console.log(err.response);
 

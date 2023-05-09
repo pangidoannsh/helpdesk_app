@@ -49,8 +49,9 @@ export default function CreateTicket(props: CreateTicketProps) {
     function handleCreate(e: any) {
         setloadingCreate(true);
         closeAlert();
+
         const dataPost = {
-            fungsi: user.fungsi,
+            fungsiId: user.fungsi?.id ?? -1,
             category: inputCategory.value,
             priority: inputPriority.value,
             subject: inputSubjectRef.current?.value,
@@ -117,8 +118,10 @@ export default function CreateTicket(props: CreateTicketProps) {
 
     return (
         <div className="flex flex-col gap-6">
-            <Select className="rounded-lg" label="PEGAWAI YANG DIPESANKAN" options={employeeOtpions}
-                useSelect={[inputEmployee, setinputEmployee]} />
+            {user.level !== 'pegawai' ? (
+                <Select className="rounded-lg" label="PEGAWAI YANG DIPESANKAN" options={employeeOtpions}
+                    useSelect={[inputEmployee, setinputEmployee]} />
+            ) : ''}
             <div className="grid grid-cols-2 gap-4 md:gap-6">
                 <Select className="rounded-lg" label="KATEGORI" options={categoryOptions} useSelect={[inputCategory, setinputCategory]} />
                 <Select className="rounded-lg" label="PRIORITAS" options={dummyPriority} useSelect={[inputPriority, setinputPriority]} />

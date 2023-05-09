@@ -5,7 +5,10 @@ interface User {
   id?: any;
   name?: string;
   level?: string;
-  fungsi?: string
+  fungsi?: {
+    id: any,
+    name: any
+  }
 }
 interface UserContextProps {
   user: User,

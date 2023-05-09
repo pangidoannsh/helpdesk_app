@@ -6,18 +6,33 @@ import {
     endOfWeek,
     format,
     getDay,
+    getMonth,
+    getYear,
     isEqual,
     isSameMonth,
+    isSameYear,
     isToday,
     parse,
     parseISO,
+    startOfDay,
+    startOfMonth,
     startOfToday,
     startOfWeek,
+
 } from 'date-fns';
-import { useEffect, useState } from 'react';
-import SelectNoBorder from '../ui/SelectNoBorder';
-import Modal from '../ui/Modal';
+import { useContext, useEffect, useState } from 'react';
+import SelectNoBorder from '../../ui/SelectNoBorder';
+import Modal from '../../ui/Modal';
 import AuthApi from '@/services/authApi';
+import { AlertContext } from '@/context/AlertProvider';
+
+const displayData = (data: any) => {
+    return {
+        id: data.id,
+        name: data.agentUser.name, time: data.dutyTime,
+        fungsi: data.agentUser.fungsi?.name.toUpperCase() ?? 'undifined'
+    };
+}
 
 const colStartClasses = [
     '',
@@ -34,16 +49,17 @@ function classNames(...classes: any) {
 }
 
 interface ScheduleTimeProps {
-    dataSchedule: Array<any>,
-    handleAdd: (agentId: any, dutyTime: any) => void,
-    handleDelete: (scheduleId: any) => void,
     agentOptions: Array<any>
+    dataSchedule: Array<any>
 }
 const defaultAgentSelected = { value: null, display: "Pilih Agen" };
 
 export default function ScheduleTime(props: ScheduleTimeProps) {
-    const { dataSchedule, handleAdd, handleDelete } = props;
+    const { setAlert, closeAlert } = useContext(AlertContext)
 
+    const [dataSchedule, setDataSchedule] = useState<any>(props.dataSchedule.map((data: any) => displayData(data)));
+
+    // const [loading, setLoading] = useState(true);
     const today = startOfToday()
     const [selectedDay, setSelectedDay] = useState(today)
     const [currentMonth, setCurrentMonth] = useState(format(today, 'MMM-yyyy'));
@@ -57,6 +73,7 @@ export default function ScheduleTime(props: ScheduleTimeProps) {
     const [agentOptions, setAgentOptions] = useState([defaultAgentSelected, ...props.agentOptions]);
     const firstDayCurrentMonth = parse(currentMonth, 'MMM-yyyy', new Date());
 
+    const [monthYearFetched, setMonthYearFetched] = useState<Date[]>([]);
     const days = eachDayOfInterval({
         start: startOfWeek(firstDayCurrentMonth),
         end: endOfWeek(endOfMonth(firstDayCurrentMonth)),
@@ -64,19 +81,55 @@ export default function ScheduleTime(props: ScheduleTimeProps) {
 
     function previousMonth() {
         let firstDayPrevMonth = add(firstDayCurrentMonth, { months: -1 });
+
+        if (firstDayPrevMonth < today && !(isEqual(firstDayPrevMonth, startOfMonth(today)))) {
+            if (monthYearFetched.findIndex(day => isEqual(day, firstDayPrevMonth)) === -1) {
+                setMonthYearFetched([...monthYearFetched, startOfDay(firstDayPrevMonth)])
+                AuthApi.get(`/time-schedule?month=${getMonth(firstDayPrevMonth) + 1}&year=${getYear(firstDayPrevMonth)}`).then(res => {
+                    if (res.data.length !== 0) {
+                        setDataSchedule([...dataSchedule, ...res.data.map((data: any) => displayData(data))]);
+                    }
+                }).catch(err => {
+                    console.log(err.response);
+                })
+            }
+        }
+
         setCurrentMonth(format(firstDayPrevMonth, 'MMM-yyyy'))
     }
 
     function nextMonth() {
         let firstDayNextMonth = add(firstDayCurrentMonth, { months: 1 })
-        setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'))
+        setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'));
     }
 
     function handleSave() {
-        handleAdd(agentSelected.value, selectedDay)
+        const dataPost = {
+            agentId: agentSelected.value,
+            dutyTime: selectedDay
+        };
+        AuthApi.post('/time-schedule', dataPost).then(res => {
+            setDataSchedule((prev: any) => [...prev, displayData(res.data)]);
+            setAlert({
+                isActived: true,
+                code: 1,
+                title: "Success",
+                message: "Berhasil menambahkan agen ke jadwal tugas"
+            })
+        }).catch(err => {
+            console.log(err.response);
+            setAlert({
+                isActived: true,
+                code: 0,
+                title: "Failed",
+                message: err.response.data.message
+            })
+        }).finally(() => setTimeout(() => closeAlert(), 2000))
+        // handleAdd(agentSelected.value, selectedDay)
         setAgentSelected(defaultAgentSelected);
         setIsAddSchedule(false);
     }
+
     function setUpDelete(agent: any) {
         setagentDeleteSelected({ value: agent.id, display: agent.name })
         setopenModalDelete(true);
@@ -85,14 +138,32 @@ export default function ScheduleTime(props: ScheduleTimeProps) {
         setopenModalDelete(false)
     }
     function handleDeleteSchedule() {
-        handleDelete(agentDeleteSelected.value)
+        AuthApi.delete(`/time-schedule/${agentDeleteSelected.value}`).then(res => {
+            setDataSchedule(dataSchedule.filter((data: any) => data.id !== agentDeleteSelected.value).map((result: any) => result));
+            setAlert({
+                isActived: true,
+                code: 1,
+                title: "Success",
+                message: "Berhasil menghapus dari agen jadwal tugas"
+            })
+        }).catch(err => {
+            setAlert({
+                isActived: true,
+                code: 0,
+                title: "Failed",
+                message: "Gagal menghapus agen dari jadwal"
+            })
+        }).finally(() => setTimeout(() => {
+            closeAlert()
+        }, 2000))
+        // handleDelete(agentDeleteSelected.value)
         setagentDeleteSelected(defaultAgentSelected);
         setopenModalDelete(false);
     }
 
     return (
         <>
-            <div className="max-w">
+            <div>
                 <div className="md:grid md:grid-cols-2 md:divide-x md:divide-gray-200">
                     <div className="md:pr-14">
                         <div className="flex items-center">
@@ -137,12 +208,12 @@ export default function ScheduleTime(props: ScheduleTimeProps) {
                                 >
                                     <button
                                         type="button"
-                                        onClick={() => setSelectedDay(day)}
+                                        onClick={() => { setSelectedDay(day); setIsAddSchedule(false) }}
                                         className={`mx-auto flex h-8 w-8 items-center justify-center rounded
                                         ${'Sat Sun'.includes(format(day, 'EEE')) ? 'text-red-500' : ''}
                                         ${isToday(day) ? 'text-primary-700 font-semibold' : ''}
                                         ${isEqual(day, selectedDay) ? 'bg-primary-600 text-white' :
-                                                dataSchedule.findIndex(data => isEqual(day, parseISO(data.time))) !== -1 ?
+                                                dataSchedule.findIndex((data: any) => isEqual(day, parseISO(data.time))) !== -1 ?
                                                     'bg-emerald-500 text-white' : ''}
                                         ${!isSameMonth(day, firstDayCurrentMonth) ? 'text-slate-400' : ''}
                                         `}
@@ -152,13 +223,13 @@ export default function ScheduleTime(props: ScheduleTimeProps) {
                                         </time>
                                     </button>
 
-                                    <div className="w-1 h-1 mx-auto mt-1">
-                                        {/* {meetings.some((meeting) =>
+                                    {/* <div className="w-1 h-1 mx-auto mt-1">
+                                        {meetings.some((meeting) =>
                                             isSameDay(parseISO(meeting.startDatetime), day)
                                         ) && (
                                                 <div className="w-1 h-1 rounded-full bg-sky-500"></div>
-                                            )} */}
-                                    </div>
+                                            )}
+                                    </div> */}
                                 </div>
                             ))}
                         </div>
@@ -171,14 +242,16 @@ export default function ScheduleTime(props: ScheduleTimeProps) {
                             </time>
                         </h2>
                         <div className="mt-4 mb-2 space-y-1 text-sm leading-6 text-gray-500 ">
-                            {dataSchedule.filter(data => isEqual(parseISO(data.time), selectedDay)).map(agent => (
-                                <div className='flex gap-1 items-center'>
-                                    <button onClick={() => setUpDelete(agent)}>
-                                        <Icon icon="material-symbols:close-rounded" className='text-red-500 text-lg' />
-                                    </button>
-                                    <span>{agent.name}</span>
-                                </div>
-                            ))}
+                            {dataSchedule.filter((data: any) => isEqual(parseISO(data.time), selectedDay))
+                                .map((agent: any, index: number) => (
+                                    <div className='flex gap-1 items-center' key={index}>
+                                        <button onClick={() => setUpDelete(agent)}>
+                                            <Icon icon="material-symbols:close-rounded" className='text-red-500 text-lg' />
+                                        </button>
+                                        <span>{agent.name}</span>
+                                    </div>
+                                ))
+                            }
                             {isAddSchedule ? <li className='flex gap-9'>
                                 <SelectNoBorder useSelect={[agentSelected, setAgentSelected]} options={agentOptions} />
                                 <div className="flex gap-3">

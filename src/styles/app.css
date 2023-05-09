@@ -21,6 +21,10 @@ body {
     width: 8px;
 }
 
+.light-scrollbar::-webkit-scrollbar {
+    width: 2px;
+}
+
 /* untuk track */
 ::-webkit-scrollbar-track {
     background-color: #c7c7c7;
@@ -145,19 +149,14 @@ input:placeholder-shown~.floating-label {
 
 /* bg-primary-700 rounded-sm p-1 text-white */
 .btn-pagination {
-    background-color: var(--primary-700);
     border-radius: 4px;
     padding: 4px;
-    color: white;
     width: 29px;
     height: 29px;
     text-align: center;
     font-weight: 500;
 }
 
-.btn-pagination:hover {
-    background-color: var(--primary-800);
-}
 
 @keyframes chat-entry-anim {
     from {

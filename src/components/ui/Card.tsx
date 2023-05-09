@@ -9,7 +9,7 @@ interface CardProps {
 export default function Card(props: CardProps) {
 
     return (
-        <div className={`${props.className} ${props.backgroundColor ?? 'bg-white'} shadow-card`}
+        <div className={`${props.className} ${props.backgroundColor ?? 'bg-white'} shadow-card `}
             ref={props.refrence ? props.refrence : null}>
             {props.children}
         </div>

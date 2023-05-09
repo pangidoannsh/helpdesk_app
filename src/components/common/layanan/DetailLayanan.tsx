@@ -9,6 +9,8 @@ import ListMessage from './ListMessage';
 import io from 'socket.io-client';
 import BASE_URL from '@/config/baseUrl';
 import { UserContext } from '@/context/UserProvider';
+import { format, parseISO } from 'date-fns';
+import { id } from 'date-fns/locale';
 
 
 const socket = io(BASE_URL);
@@ -117,7 +119,7 @@ export default function DetailLayanan({ detailLayanan, listMessages = [],
                                     <div className='flex md:flex-row flex-col gap-4 md:gap-12'>
                                         <div className="text-sm">
                                             <div className='text-slate-500'>Fungsi</div>
-                                            <div className='text-slate-800'>Kepegawaian</div>
+                                            <div className='text-slate-800 uppercase'>{detailLayanan.fungsi?.name ?? 'undifined'}</div>
                                         </div>
                                         <div className="text-sm">
                                             <div className='text-slate-500'>Prioritas</div>
@@ -125,12 +127,14 @@ export default function DetailLayanan({ detailLayanan, listMessages = [],
                                         </div>
                                         <div className="text-sm">
                                             <div className='text-slate-500'>Waktu Dibuat</div>
-                                            <div className='text-slate-800'>{detailLayanan.createdAt}</div>
-                                            {/* <div className='text-slate-800'>12:00 14 Maret 2023</div> */}
+                                            <div className='text-slate-800'>
+                                                {format(parseISO(detailLayanan.createdAt), 'HH:m dd MMMM yyyy', { locale: id })}
+                                            </div>
                                         </div>
                                         <div className="text-sm">
                                             <div className='text-slate-500'>Masa Aktif</div>
-                                            <div className='text-slate-800'>18 Maret 2023</div>
+                                            <div className='text-slate-800'>
+                                                {format(parseISO(detailLayanan.expiredAt), 'HH:m dd MMMM yyyy', { locale: id })}</div>
                                         </div>
                                     </div>
                                     <div className="divider-bottom" />

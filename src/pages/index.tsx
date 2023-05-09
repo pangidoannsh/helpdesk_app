@@ -2,12 +2,22 @@ import Modal from "@/components/ui/Modal";
 import CreateTicket from "@/components/common/CreateTicket";
 import CommonLayout from "@/components/layouts/Common"
 import { Icon } from '@iconify/react';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Footer from "@/components/common/Footer";
 
 
 export default function Home() {
   const [isOpenCreateTiket, setIsOpenCreateTiket] = useState(false);
+
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     console.log('fetch!');
+
+  //   }, 3000);
+  //   return () => {
+  //     clearInterval(interval);
+  //   }
+  // }, [])
 
   return (
     <CommonLayout title="Helpdesk IT BPS Riau" >

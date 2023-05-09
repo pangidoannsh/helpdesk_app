@@ -2,6 +2,9 @@ import React, { Fragment, ReactNode } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { Icon } from '@iconify/react'
 
+enum Orientation {
+    'VERTICAL', 'HORIZONTAL'
+}
 interface SelectProps {
     label?: string;
     options?: Array<any>;
@@ -20,7 +23,7 @@ const SelectNoBorder = ({ label, options = [], useSelect, className, catchSelect
         }
     }
     return (
-        <div className='flex flex-col gap-2 w-full'>
+        <div className={`flex flex-col gap-2 w-full`}>
             {label ? <label className={`text-sm text-slate-600`}>{label}</label> : ''}
             <Listbox value={selected} onChange={handleSelect}>
                 <div className="relative">

@@ -1,13 +1,10 @@
+import DashboardLayout from "@/components/layouts/Dashboard";
 
 export default function Dashboard() {
     return (
-        <div>
-            Dashboard Login
-        </div>
+        <DashboardLayout title="Dashboard | Helpdesk IT" content="dashboard helpdesk it">
+            Dashboard
+        </DashboardLayout>
     )
 }
 
-export async function getServerSideProps(context: any) {
-    context.res.writeHead(302, { location: '/dashboard/ticket' });
-    context.res.end();
-}

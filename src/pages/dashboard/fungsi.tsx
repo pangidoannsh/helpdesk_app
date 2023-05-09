@@ -137,7 +137,9 @@ export default function FungsiPage(props: FungsiPageProps) {
             setopenModalDelete(false);
 
         }).catch(err => {
-            let message = "Gagal Menghapus Fungsi" + dataDelete.name;
+            console.log(err.response);
+
+            let message = "Gagal Menghapus Fungsi " + dataDelete.name;
             if (err.response.status === 401) {
                 setTimeout(() => router.push('/'), 2000);
                 message = "User belum terautentikasi!, silahkan Login terlebih dahulu"
@@ -151,13 +153,6 @@ export default function FungsiPage(props: FungsiPageProps) {
             })
         }).finally(() => setTimeout(() => closeAlert(), 3000))
     }
-    // useEffect(() => {
-    //     AuthApi.get('/fungsi').then(res => {
-    //         setDataFungsi(res.data.map((data: any) => displayData(data)));
-    //     }).catch(err => {
-    //         console.log(err.response);
-    //     }).finally(() => setLoadingTable(false))
-    // }, []);
 
     return (
         <DashboardLayout title='Fungsi | Helpdesk IT'>
