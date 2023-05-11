@@ -15,7 +15,9 @@ interface TableProps {
     emptyDataMessage?: string;
 }
 export default function Table(props: TableProps) {
+
     const { dataBody, column, loading, emptyDataMessage } = props;
+
     return (
         <table className='table-auto w-full'>
             <thead>
@@ -31,7 +33,7 @@ export default function Table(props: TableProps) {
 
             <tbody>
                 {!loading ?
-                    dataBody.length !== 0 ?
+                    dataBody?.length !== 0 ?
                         dataBody.map((dataRow, index) => (
                             <tr key={index} className="hover:bg-primary-500/5">
                                 {column.map(col => (

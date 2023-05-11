@@ -5,9 +5,10 @@ interface TablePaginationProps {
     currentPage: number;
     setCurrentPage: (current: number) => void;
     functionFetching: (offset: number) => void;
+    handleFetchPage: (page: number) => void
 }
 export default function TablePagination(props: TablePaginationProps) {
-    const { totalPage, currentPage, setCurrentPage, functionFetching } = props;
+    const { totalPage, currentPage, setCurrentPage, functionFetching, handleFetchPage } = props;
     function handleNext() {
         setCurrentPage(currentPage + 1);
         functionFetching(currentPage * 10);
@@ -16,6 +17,10 @@ export default function TablePagination(props: TablePaginationProps) {
         setCurrentPage(currentPage - 1);
     }
 
+    function handleClickPage(page: number) {
+        setCurrentPage(page);
+        handleFetchPage(page)
+    }
     return (
         <div className="flex gap-1">
             <button className='btn-pagination bg-primary-700 text-white hover:bg-primary-800 text-xl focus:ring 
@@ -27,7 +32,7 @@ export default function TablePagination(props: TablePaginationProps) {
                 <button className={`btn-pagination text-sm focus:ring focus:ring-sky-200 duration-100 
                 ${index + 1 === currentPage ? 'hover:bg-primary-800 bg-primary-700 text-white'
                         : 'hover:bg-primary-700 text-primary-700 hover:text-white'}`}
-                    key={index}>
+                    key={index} onClick={() => handleClickPage(index + 1)}>
                     {index + 1}
                 </button>
             ))}

@@ -8,8 +8,6 @@ import AuthApi from '@/services/authApi';
 import Link from 'next/link';
 import { parseCookies } from 'nookies';
 import React, { useEffect, useState } from 'react'
-import { format, parseISO } from 'date-fns';
-import { id } from 'date-fns/locale';
 import Converter from '@/utils/converter';
 
 interface TicketPageProps {
@@ -28,7 +26,7 @@ const columnTable = [
 const displayData = (data: any) => {
     return {
         ...data, priority: data.priority.toUpperCase() ?? data.priority, category: data.category.categoryName,
-        fungsi: data.fungsi.name.toUpperCase(),
+        fungsi: data.fungsi?.name?.toUpperCase() ?? 'undifined',
         idTicket: <Link href={`/dashboard/ticket/${data.id}`}>
             <div className="font-medium text-ternary">#{data.id}</div>
             <div className="mt-1 text-sm text-slate-500">{Converter.dateToMMformat(data.createdAt)}</div>
@@ -82,6 +80,37 @@ export default function Ticket(props: TicketPageProps) {
             })
         }
     }
+
+    function handleFetchPage(page: number) {
+        const currentFetched = pageFetched.map(data => data);
+
+        for (let i = page; i > 0; i--) {
+            currentFetched.push(i);
+        }
+
+        if (pageFetched.findIndex(thisPage => thisPage === page) === -1) {
+            AuthApi.get(`/ticket?limit=${(page * 10) - (currentPage * 10)}&offset=${currentPage * 10}&${filterQuery}`)
+                .then(res => {
+                    const updateData = [...ticketData, ...res.data.map((data: any) => displayData(data))];
+
+                    setTicketData(updateData.filter((obj, index, arr) => {
+                        return arr.map(mapObj => mapObj.id).indexOf(obj.id) === index;
+                    }));
+
+                    setPageFetched(currentFetched.filter((value, index) => {
+                        return currentFetched.indexOf(value) === index;
+                    }))
+
+                })
+                .catch(err => {
+                    console.log(err.response);
+                })
+        }
+    }
+    useEffect(() => {
+        console.log(pageFetched);
+    }, [pageFetched])
+
     return (
         <DashboardLayout title='Tiket | Helpdesk Dashboard'>
             <Search border='rounded' functionSearch={handleSearch} />
@@ -91,7 +120,7 @@ export default function Ticket(props: TicketPageProps) {
                 <div className="flex justify-between items-center">
                     <span className='text-slate-500 text-sm'>menampilkan {ticketData.length} dari {totalData}</span>
                     <TablePagination totalPage={totalPage} currentPage={currentPage} setCurrentPage={setcurrentPage}
-                        functionFetching={handleAddFetch} />
+                        functionFetching={handleAddFetch} handleFetchPage={handleFetchPage} />
                 </div>
             </Card>
         </DashboardLayout>
