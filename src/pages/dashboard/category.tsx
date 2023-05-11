@@ -152,13 +152,6 @@ export default function CategoryPage(props: CategoryPageProps) {
         setopenModalDelete(false);
         setDataDelete(null)
     }
-    // useEffect(() => {
-    //     AuthApi.get('/category').then(res => {
-    //         setDataCategory(res.data.map((data: any) => displayData(data)));
-    //     }).catch(err => {
-    //         console.log(err.response);
-    //     }).finally(() => setLoadingTable(false))
-    // }, []);
 
     return (
         <DashboardLayout title='Kategori Layanan | Helpdesk IT'>
@@ -190,19 +183,15 @@ export default function CategoryPage(props: CategoryPageProps) {
                 }
             </Card>
             {/* Modal Konfirmasi Delete */}
-            <Modal isOpen={openModalDelete} setIsOpen={setopenModalDelete} title="Delete Kategori" size={500}>
-                <div className='text-lg text-slate-700'>Apakah Anda Yakin Ingin Menghapus Kategori
-                    <span className='uppercase'> {dataDelete?.categoryName}</span> ?
-                </div>
-                <div className="flex justify-end gap-2 mt-4">
-                    <button className='border border-red-500 text-red-500 rounded py-2 px-4 hover:bg-red-500 
-                    hover:text-white' onClick={() => handleDelete()}>
-                        HAPUS
-                    </button>
-                    <button className='bg-slate-300 text-slate-500 rounded py-2 px-4 border hover:border-slate-500'
-                        onClick={() => cancelDelete()}>
-                        BATAL
-                    </button>
+            <Modal isOpen={openModalDelete} setIsOpen={setopenModalDelete} size={300} className='p-4'>
+                <div className="flex flex-col gap-2">
+                    <div className='text-slate-800'>Hapus Kategori <span className='font-semibold'> {dataDelete?.categoryName}</span>?</div>
+                    <div className="flex gap-2 justify-end">
+                        <button className='text-red-500 hover:text-red-700'
+                            onClick={() => handleDelete()}>Hapus</button>
+                        <button className='text-slate-400 hover:text-slate-600'
+                            onClick={() => cancelDelete()}>Batal</button>
+                    </div>
                 </div>
             </Modal>
         </DashboardLayout>

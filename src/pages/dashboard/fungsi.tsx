@@ -121,7 +121,6 @@ export default function FungsiPage(props: FungsiPageProps) {
     }
     function cancelDelete() {
         setopenModalDelete(false);
-        setDataDelete(null)
     }
 
     function handleDelete() {
@@ -132,19 +131,20 @@ export default function FungsiPage(props: FungsiPageProps) {
                 isActived: true,
                 code: 1,
                 title: "Success",
-                message: "Berhasil Menghapus Fungsi " + dataDelete.name
+                message: "Berhasil Menghapus Fungsi " + dataDelete.name?.toUpperCase()
             })
             setopenModalDelete(false);
 
         }).catch(err => {
             console.log(err.response);
-
             let message = "Gagal Menghapus Fungsi " + dataDelete.name;
             if (err.response.status === 401) {
                 setTimeout(() => router.push('/'), 2000);
                 message = "User belum terautentikasi!, silahkan Login terlebih dahulu"
             };
             if (err.response.status === 403) message = "User tidak memiliki akses!";
+
+            if (err.response.status === 406) message = err.response?.data?.message ?? 'Tidak dapat menghapus Fungsi yang masih terkait ke user!'
             setAlert({
                 isActived: true,
                 code: 0,
@@ -178,19 +178,17 @@ export default function FungsiPage(props: FungsiPageProps) {
                     </form>}
             </Card>
             {/* Modal Konfirmasi Delete */}
-            <Modal isOpen={openModalDelete} setIsOpen={setopenModalDelete} title="Delete Fungsi" size={500}>
-                <div className='text-lg text-slate-700'>Apakah Anda Yakin Ingin Menghapus Fungsi
-                    <span className='uppercase'> {dataDelete?.name}</span> ?
-                </div>
-                <div className="flex justify-end gap-2 mt-4">
-                    <button className='border border-red-500 text-red-500 rounded py-2 px-4 hover:bg-red-500 
-                    hover:text-white' onClick={() => handleDelete()}>
-                        HAPUS
-                    </button>
-                    <button className='bg-slate-300 text-slate-500 rounded py-2 px-4 border hover:border-slate-500'
-                        onClick={() => cancelDelete()}>
-                        BATAL
-                    </button>
+            <Modal isOpen={openModalDelete} setIsOpen={setopenModalDelete} size={300} className='p-4'>
+                <div className="flex flex-col gap-2">
+                    <div className='text-slate-800'>Hapus Fungsi <span className='font-semibold uppercase'>
+                        {dataDelete?.name}
+                    </span> ?</div>
+                    <div className="flex gap-2 justify-end">
+                        <button className='text-red-500 hover:text-red-700'
+                            onClick={() => handleDelete()}>Hapus</button>
+                        <button className='text-slate-400 hover:text-slate-600'
+                            onClick={() => cancelDelete()}>Batal</button>
+                    </div>
                 </div>
             </Modal>
         </DashboardLayout>
