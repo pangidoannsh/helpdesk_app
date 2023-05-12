@@ -7,8 +7,11 @@ import { api } from '@/config/api';
 import AuthApi from '@/services/authApi';
 import Link from 'next/link';
 import { parseCookies } from 'nookies';
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Converter from '@/utils/converter';
+import { Icon } from '@iconify/react';
+import Modal from '@/components/ui/Modal';
+import { AlertContext } from '@/context/AlertProvider';
 
 interface TicketPageProps {
     dataTicket: Array<any>;
@@ -23,29 +26,37 @@ const columnTable = [
     { header: 'prioritas', field: 'priority', width: "120px", align: 'center' },
     { header: 'status', field: 'status', width: "100px", align: 'center' },
 ];
-const displayData = (data: any) => {
-    return {
-        ...data, priority: data.priority.toUpperCase() ?? data.priority, category: data.category.categoryName,
-        fungsi: data.fungsi?.name?.toUpperCase() ?? 'undifined',
-        idTicket: <Link href={`/dashboard/ticket/${data.id}`}>
-            <div className="font-medium text-ternary">#{data.id}</div>
-            <div className="mt-1 text-sm text-slate-500">{Converter.dateToMMformat(data.createdAt)}</div>
-        </Link>,
-        subject: <Link href={`/dashboard/ticket/${data.id}`}>
-            <div className="font-medium text-ternary capitalize">{data.subject}</div>
-            <div className="mt-1 text-sm text-slate-500">{data.userOrderer.name}</div>
-        </Link>,
-        status: <div className="flex justify-center items-center">
-            <div className={`status text-sm ${data.status === "open" ? "text-green-500 bg-green-100" :
-                data.status === "process" ? "text-secondary bg-secondary/20" :
-                    data.status === "done" ? "text-primary-500 bg-sky-200" : 'text-slate-500 bg-slate-200'}`}
-            >
-                {data.status}
-            </div>
-        </div>
-    }
-}
+
 export default function Ticket(props: TicketPageProps) {
+    const displayData = (data: any) => {
+        return {
+            ...data, priority: data.priority.toUpperCase() ?? data.priority, category: data.category.categoryName,
+            fungsi: data.fungsi?.name?.toUpperCase() ?? 'undifined',
+            idTicket: <Link href={`/dashboard/ticket/${data.id}`}>
+                <div className="font-medium text-ternary">#{data.id}</div>
+                <div className="mt-1 text-sm text-slate-500">{Converter.dateToMMformat(data.createdAt)}</div>
+            </Link>,
+            subject: <Link href={`/dashboard/ticket/${data.id}`}>
+                <div className="font-medium text-ternary capitalize">{data.subject}</div>
+                <div className="mt-1 text-sm text-slate-500">{data.userOrderer.name}</div>
+            </Link>,
+            status: <div className="flex justify-center items-center relative status-ticket">
+                <div className={`status text-sm ${data.status === "open" ? "text-green-500 bg-green-100" :
+                    data.status === "process" ? "text-secondary bg-secondary/20" :
+                        data.status === "done" ? "text-primary-500 bg-sky-200" : 'text-slate-500 bg-slate-200'}`}>
+                    {data.status}
+                </div>
+                <button onClick={() => setupDelete(data)}
+                    className={`absolute -right-5 top-1/2 -translate-y-1/2 z-20
+                    ${data.status === 'expired' ? 'exp-ticket' : 'hidden'}`}>
+                    <Icon icon='fa6-solid:trash' className='text-red-500 text-lg' />
+                </button>
+            </div>
+        }
+    }
+
+    const { setAlert, closeAlert } = useContext(AlertContext);
+
     const [totalData, setTotalData] = useState(props.totalData)
     const [ticketData, setTicketData] = useState(props.dataTicket.map((data: any) => displayData(data)));
     const [totalPage, settotalPage] = useState(Math.ceil(props.totalData / 10));
@@ -53,6 +64,8 @@ export default function Ticket(props: TicketPageProps) {
     const [loadingTable, setloadingTable] = useState(false);
     const [pageFetched, setPageFetched] = useState([1]);
     const [filterQuery, setFilterQuery] = useState("");
+    const [ticketDelete, setTicketDelete] = useState<any>(null);
+    const [openModalDelete, setopenModalDelete] = useState(false)
 
     function handleSearch(query: string) {
         setFilterQuery(query);
@@ -108,9 +121,51 @@ export default function Ticket(props: TicketPageProps) {
         }
     }
 
+    function setupDelete(ticket: any) {
+        setTicketDelete(ticket);
+        setopenModalDelete(true)
+
+    }
+
+    function handleDelete() {
+        AuthApi.delete(`ticket/${ticketDelete.id}`).then(res => {
+            setAlert({
+                isActived: true,
+                code: 1,
+                title: 'Success',
+                message: "Berhasil Menghapus Tiket!"
+            })
+            setTotalData(prev => prev - 1);
+            console.log(res);
+
+            setTicketData(ticketData.filter(ticket => ticket.id !== ticketDelete.id).map(data => data));
+            setopenModalDelete(false)
+        }).catch(err => {
+            setAlert({
+                isActived: true,
+                code: 0,
+                title: 'Failed',
+                message: "Gagal Menghapus Tiket!"
+            })
+            console.log(err.response);
+        }).finally(() => {
+            setTimeout(() => {
+                closeAlert()
+            }, 2000)
+        })
+    }
+
+    function cancelDelete() {
+        setopenModalDelete(false)
+    }
+
+    useEffect(() => {
+        settotalPage(Math.ceil(totalData / 10))
+    }, [totalData])
+
     return (
         <DashboardLayout title='Tiket | Helpdesk Dashboard'>
-            <Search border='rounded' functionSearch={handleSearch} defaultStatus='open' />
+            <Search border='rounded' functionSearch={handleSearch} />
             <Card className='flex flex-col p-9 gap-6 rounded'>
                 <Table column={columnTable} dataBody={ticketData.slice((currentPage - 1) * 10, currentPage * 10)}
                     emptyDataMessage="Tiket Kosong" loading={loadingTable} />
@@ -120,6 +175,17 @@ export default function Ticket(props: TicketPageProps) {
                         functionFetching={handleAddFetch} handleFetchPage={handleFetchPage} />
                 </div>
             </Card>
+            <Modal isOpen={openModalDelete} setIsOpen={setopenModalDelete} size={300} className='p-4'>
+                <div className="flex flex-col gap-2">
+                    <div className='text-slate-800'>Hapus Ticket Expired, Subjek : <span className='font-semibold'>{ticketDelete?.subject}</span> ?</div>
+                    <div className="flex gap-2 justify-end">
+                        <button className='text-red-500 hover:text-red-700'
+                            onClick={() => handleDelete()}>Hapus</button>
+                        <button className='text-slate-400 hover:text-slate-600'
+                            onClick={() => cancelDelete()}>Batal</button>
+                    </div>
+                </div>
+            </Modal>
         </DashboardLayout>
     )
 }
@@ -138,7 +204,7 @@ export async function getServerSideProps(context: any) {
     let dataTicket: any = [];
     let totalData: number = 0;
     // secara default hanya akan mengambil data dengan status open
-    await api.get("/ticket?limit=10&status=open", {
+    await api.get("/ticket?limit=10", {
         headers: { Authorization: `Bearer ${token}` }
     }).then(res => {
         dataTicket = res.data
@@ -146,7 +212,7 @@ export async function getServerSideProps(context: any) {
     })
 
     // secara default hanya akan mengambil data dengan status open
-    await api.get("/ticket/length?status=open", {
+    await api.get("/ticket/length", {
         headers: { Authorization: `Bearer ${token}` }
     }).then(res => {
         totalData = res.data

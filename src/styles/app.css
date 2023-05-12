@@ -157,6 +157,14 @@ input:placeholder-shown~.floating-label {
     font-weight: 500;
 }
 
+.exp-ticket {
+    display: none;
+    cursor: pointer;
+}
+
+.table-row:hover .exp-ticket {
+    display: block;
+}
 
 @keyframes chat-entry-anim {
     from {

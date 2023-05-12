@@ -35,7 +35,7 @@ export default function Table(props: TableProps) {
                 {!loading ?
                     dataBody?.length !== 0 ?
                         dataBody.map((dataRow, index) => (
-                            <tr key={index} className="hover:bg-primary-500/5">
+                            <tr key={index} className="hover:bg-primary-500/5 table-row">
                                 {column.map(col => (
                                     <td key={col.field}
                                         className={`${col.className ?? 'table-body'} ${col.align ? 'text-' + col.align : 'text-start'}`}>
