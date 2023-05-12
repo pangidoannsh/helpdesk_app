@@ -18,7 +18,7 @@ export default class AuthApi {
         })
     }
 
-    static put(url: string, payload: any) {
+    static put(url: string, payload?: any) {
         return api.put(url, payload, {
             headers: {
                 Authorization: `Bearer ${Cookies.get('jwt')}`

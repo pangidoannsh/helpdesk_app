@@ -26,16 +26,22 @@ interface SearchProps {
     functionSearch: (query: string) => void;
     className?: string;
     withoutFungsi?: boolean;
+    defaultStatus?: string;
 }
 export default function Search(props: SearchProps) {
-    const { border, functionSearch } = props;
+    const { border, functionSearch, defaultStatus } = props;
 
     const subjectRef = useRef<HTMLInputElement>(null);
     const [categoryOptions, setcategoryOptions] = useState<any>([]);
     const [fungsiOptions, setfungsiOptions] = useState<any>([]);
 
     const [categoryInput, setCategoryInput] = useState({ value: null, display: "Semua Kategori" })
-    const [statusInput, setStatusInput] = useState({ value: null, display: "Semua Status" })
+
+    const [statusInput, setStatusInput] = useState({
+        value: defaultStatus ?? null,
+        display: defaultStatus?.toUpperCase() ?? "Semua Status"
+    })
+
     const [priorityInput, setPriorityInput] = useState({ value: null, display: "Semua Prioritas" })
     const [fungsiInput, setFungsiInput] = useState({ value: null, display: "Semua Fungsi" })
 

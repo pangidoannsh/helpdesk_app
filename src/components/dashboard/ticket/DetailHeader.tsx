@@ -7,6 +7,7 @@ import { UserContext } from "@/context/UserProvider";
 import AuthApi from "@/services/authApi";
 import { RefObject, useContext, useState } from "react";
 import { io } from "socket.io-client";
+import { AlertContext } from "@/context/AlertProvider";
 
 const nullResponse = { value: null, display: "Balas Pesan Dengan Cepat" };
 const socket = io(BASE_URL);
@@ -15,15 +16,18 @@ interface DetailHeaderProps {
     isGeneral: boolean;
     setIsGeneral: (isGeneral: boolean) => void;
     detail: any;
+    setDetail: (detail: any) => void
     messageRef: RefObject<HTMLTextAreaElement>;
     setDataMessage: (dataMessage: any) => void;
     responsesOptions?: Array<any>;
 }
 export default function DetailHeader(props: DetailHeaderProps) {
     const { user } = useContext(UserContext)
-    const { isGeneral, setIsGeneral, detail, messageRef, setDataMessage, responsesOptions } = props;
+    const { setAlert, closeAlert } = useContext(AlertContext);
+    const { isGeneral, setIsGeneral, detail, messageRef, setDataMessage, responsesOptions, setDetail } = props;
     const [fastReply, setFastReply] = useState(nullResponse);
     const [loadingSend, setloadingSend] = useState(false);
+    const [loadingProcess, setloadingProcess] = useState(false);
 
     function getSelect(value: any) {
         if (messageRef) {
@@ -34,23 +38,65 @@ export default function DetailHeader(props: DetailHeaderProps) {
     }
 
     const handleSend = (event: any) => {
-        const dataPost = {
-            ticketId: detail.id,
-            content: messageRef.current?.value.replaceAll("\n", "<br/>")
-        }
-        // socket.emit('sendMessage', dataPost)
-        // console.log(dataPost);
-        setloadingSend(true)
-        AuthApi.post('/ticket-message', dataPost).then(res => {
-            // setDataMessage((prev: any) => [...prev, res.data]);
-            messageRef.current ? messageRef.current.value = "" : '';
-            setFastReply(nullResponse);
+        if (detail.status !== 'expired') {
+            const dataPost = {
+                ticketId: detail.id,
+                content: messageRef.current?.value.replaceAll("\n", "<br/>")
+            }
+            // socket.emit('sendMessage', dataPost)
+            // console.log(dataPost);
+            setloadingSend(true)
+            AuthApi.post('/ticket-message', dataPost).then(res => {
+                // setDataMessage((prev: any) => [...prev, res.data]);
+                messageRef.current ? messageRef.current.value = "" : '';
+                setFastReply(nullResponse);
+                if (detail?.status ?? 'open' === 'open') {
+                    handleProcess();
+                }
+            }).catch(err => {
+                console.log(err.response);
 
+            }).finally(() => setloadingSend(false));
+        } else {
+            setAlert({
+                isActived: true,
+                code: 0,
+                title: "Gagal Mengirim Pesan",
+                message: "Status Ticket sudah EXPIRED!"
+            })
+            setTimeout(() => {
+                closeAlert()
+            }, 2000);
+        }
+    }
+
+    const handleProcess = (event?: any) => {
+        setloadingProcess(true);
+        closeAlert();
+        AuthApi.put(`/ticket/${detail.id ?? -1}/process`).then(res => {
+            setAlert({
+                isActived: true,
+                code: 1,
+                title: "Updated",
+                message: "Status Ticket Berubah ke PROCESS!"
+            })
+            setDetail((prev: any) => ({ ...prev, status: 'process' }))
         }).catch(err => {
             console.log(err.response);
-
-        }).finally(() => setloadingSend(false));
+            setAlert({
+                isActived: true,
+                code: 0,
+                title: "Failed",
+                message: "Status Ticket Gagal berubah ke PROCESS!"
+            })
+        }).finally(() => {
+            setloadingProcess(false);
+            setTimeout(() => {
+                closeAlert()
+            }, 2000);
+        });
     }
+
     return (
         <Card className='flex flex-col gap-8 p-9 rounded'>
             {/* Tab */}
@@ -92,7 +138,7 @@ export default function DetailHeader(props: DetailHeaderProps) {
                     <div className='flex gap-12'>
                         <div className="text-sm">
                             <div className='text-slate-500'>Fungsi</div>
-                            <div className='text-slate-800 uppercase'>{detail?.fungsi ?? ''}</div>
+                            <div className='text-slate-800 uppercase'>{detail?.fungsi?.name ?? 'undifined'}</div>
                         </div>
                         <div className="text-sm">
                             <div className='text-slate-500'>Prioritas</div>
@@ -109,7 +155,13 @@ export default function DetailHeader(props: DetailHeaderProps) {
                             </div>
                         </div>
                     </div>
-                    <div className="divider-bottom" />
+                    <div>
+                        <Button className="rounded text-white items-center py-2 px-8 uppercase"
+                            onClick={handleProcess} loading={loadingProcess} disabled={detail.status === 'expired'}>
+                            Proses Ticket
+                        </Button>
+                    </div>
+                    {/* <div className="divider-bottom" /> */}
                 </>
             ) :
                 (<>

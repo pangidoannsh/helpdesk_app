@@ -107,13 +107,10 @@ export default function Ticket(props: TicketPageProps) {
                 })
         }
     }
-    useEffect(() => {
-        console.log(pageFetched);
-    }, [pageFetched])
 
     return (
         <DashboardLayout title='Tiket | Helpdesk Dashboard'>
-            <Search border='rounded' functionSearch={handleSearch} />
+            <Search border='rounded' functionSearch={handleSearch} defaultStatus='open' />
             <Card className='flex flex-col p-9 gap-6 rounded'>
                 <Table column={columnTable} dataBody={ticketData.slice((currentPage - 1) * 10, currentPage * 10)}
                     emptyDataMessage="Tiket Kosong" loading={loadingTable} />
@@ -140,15 +137,16 @@ export async function getServerSideProps(context: any) {
 
     let dataTicket: any = [];
     let totalData: number = 0;
-
-    await api.get("/ticket?limit=10", {
+    // secara default hanya akan mengambil data dengan status open
+    await api.get("/ticket?limit=10&status=open", {
         headers: { Authorization: `Bearer ${token}` }
     }).then(res => {
         dataTicket = res.data
     }).catch(err => {
     })
 
-    await api.get("/ticket/length", {
+    // secara default hanya akan mengambil data dengan status open
+    await api.get("/ticket/length?status=open", {
         headers: { Authorization: `Bearer ${token}` }
     }).then(res => {
         totalData = res.data

@@ -64,7 +64,7 @@ export default function TicketDetail() {
         <DashboardLayout title='Tiket | Helpdesk Dashboard'>
             {loadingPage ? <DashboardLoading /> : <>
                 <DetailHeader detail={detail} isGeneral={isGeneral} setIsGeneral={setisGeneral} messageRef={messageRef}
-                    setDataMessage={setDataMessages} responsesOptions={responseOptions} />
+                    setDataMessage={setDataMessages} responsesOptions={responseOptions} setDetail={setdetail} />
                 <div className="flex flex-col-reverse gap-4">
                     {dataMessages.map((message: any, index: number) =>
                         <div key={index}>
