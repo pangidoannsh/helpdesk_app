@@ -22,15 +22,18 @@ const status = [
 const feedbackLabels = [
     {
         label: 'Sangat Puas',
-        color: 'bg-primary-600'
+        color: 'bg-primary-600',
+        count: 60
     },
     {
         label: 'Puas',
-        color: 'bg-secondary'
+        color: 'bg-secondary',
+        count: 30
     },
     {
         label: 'Tidak Puas',
-        color: 'bg-slate-400'
+        color: 'bg-slate-400',
+        count: 10
     },
 ]
 
