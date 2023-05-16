@@ -105,7 +105,8 @@ export default function DetailLayanan({ detailLayanan, listMessages = [],
                                             ${detailLayanan.status === "open" ? "text-green-500 bg-green-100" :
                                                     detailLayanan.status === "process" ? "text-secondary bg-secondary/20" :
                                                         detailLayanan.status === "done" ? "text-primary-500 bg-sky-200" :
-                                                            'text-slate-500 bg-slate-200'
+                                                            detailLayanan.status === "expired" ? "text-red-500 bg-red-200" :
+                                                                'text-slate-500 bg-slate-200'
                                                 }`}>
                                                 {detailLayanan.status}
                                             </div>

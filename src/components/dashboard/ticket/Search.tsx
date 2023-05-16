@@ -10,6 +10,7 @@ const statusOptions = [
     { value: null, display: "Semua Status" },
     { value: 'open', display: "OPEN" },
     { value: 'process', display: "PROCESS" },
+    { value: 'feedback', display: "FEEDBACK" },
     { value: 'done', display: "DONE" },
     { value: 'expired', display: "EXPIRED" },
 ]

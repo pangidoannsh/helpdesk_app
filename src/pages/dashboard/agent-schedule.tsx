@@ -31,41 +31,13 @@ export default function AgentSchedulePage(props: ConfigurationProps) {
         display: props.base === "time" ? "Waktu" : "Fungsi"
     });
 
-    function handleChangeBaseSchedule(baseScheduleSelected: any) {
-        // closeAlert();
-        // AuthApi.put('/config/base-schedule', {
-        //     baseSchedule: baseScheduleSelected
-        // }).then(res => {
-        //     console.log(res.data);
-        //     setAlert({
-        //         isActived: true,
-        //         code: 1,
-        //         title: 'Update',
-        //         message: 'Jadwal Berdasarkan ' + (res.data === 'time' ? 'Waktu' : 'Fungsi')
-        //     })
-        // }).catch(err => {
-        //     console.log(err.response);
-        //     setAlert({
-        //         isActived: true,
-        //         code: 0,
-        //         title: 'Error',
-        //         message: 'Gagal mengubah Jadwal'
-        //     })
-        //     setBaseSchedule({
-        //         value: baseScheduleSelected === 'time' ? 'fungsi' : 'time',
-        //         display: baseScheduleSelected === 'time' ? 'Fungsi' : 'Waktu'
-        //     });
-        // }).finally(() => setTimeout(() => closeAlert(), 3000))
-    }
-
     return (
         <DashboardLayout title='Configuration | Helpdesk IT'>
             <Card className='rounded p-9 flex flex-col gap-6'>
                 <div className="flex gap-6 items-center">
                     <h3 className='text-xl font-medium text-primary-700 uppercase'>Jadwal Tugas Agen</h3>
                     <div>
-                        <SelectNoBorder useSelect={[baseSchedule, setBaseSchedule]} options={baseScheduleOptions} className='pr-6'
-                            catchSelect={handleChangeBaseSchedule} />
+                        <SelectNoBorder useSelect={[baseSchedule, setBaseSchedule]} options={baseScheduleOptions} className='pr-6' />
                     </div>
                 </div>
                 {baseSchedule.value === 'time' ?

@@ -1,16 +1,13 @@
 import { api } from '@/config/api';
 import { parseCookies } from 'nookies';
 import Layanan from '@/components/common/layanan/Layanan';
-import { Suspense } from 'react';
 
 interface LayananPageProps {
     listLayanan?: any;
 }
 export default function LayananPage(props: LayananPageProps) {
     return (
-        <Suspense fallback={<div>Loading...</div>}>
-            <Layanan listLayanan={props.listLayanan} />
-        </Suspense>
+        <Layanan listLayanan={props.listLayanan} />
     )
 }
 

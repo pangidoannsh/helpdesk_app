@@ -10,16 +10,16 @@ interface SelectProps {
     options?: Array<any>;
     useSelect: any;
     className?: string;
-    catchSelect?: (value: any) => void;
+    onChange?: (value: any) => void;
 }
-const SelectNoBorder = ({ label, options = [], useSelect, className, catchSelect }: SelectProps) => {
+const SelectNoBorder = ({ label, options = [], useSelect, className, onChange }: SelectProps) => {
 
     const [selected, setSelected] = useSelect;
 
     function handleSelect(select: any) {
         setSelected(select);
-        if (catchSelect) {
-            catchSelect(select?.value ?? "")
+        if (onChange) {
+            onChange(select?.value ?? "")
         }
     }
     return (

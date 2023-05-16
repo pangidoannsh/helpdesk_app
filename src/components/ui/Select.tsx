@@ -9,15 +9,15 @@ interface SelectProps {
     className?: string;
     icon?: string;
     width?: string;
-    catchSelect?: (catches: any) => void
+    onChange?: (catches: any) => void
 }
-const Select = ({ label, options = [], useSelect, icon, className, width, catchSelect }: SelectProps) => {
+const Select = ({ label, options = [], useSelect, icon, className, width, onChange }: SelectProps) => {
 
     const [selected, setSelected] = useSelect;
 
     function handleSelect(select: any) {
-        if (catchSelect) {
-            catchSelect(select);
+        if (onChange) {
+            onChange(select);
         }
         setSelected(select);
     }

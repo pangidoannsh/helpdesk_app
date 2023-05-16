@@ -43,7 +43,9 @@ export default function Ticket(props: TicketPageProps) {
             status: <div className="flex justify-center items-center relative status-ticket">
                 <div className={`status text-sm ${data.status === "open" ? "text-green-500 bg-green-100" :
                     data.status === "process" ? "text-secondary bg-secondary/20" :
-                        data.status === "done" ? "text-primary-500 bg-sky-200" : 'text-slate-500 bg-slate-200'}`}>
+                        data.status === "done" ? "text-primary-500 bg-sky-200" :
+                            data.status === "expired" ? "text-red-500 bg-red-200" :
+                                'text-slate-500 bg-slate-200'}`}>
                     {data.status}
                 </div>
                 <button onClick={() => setupDelete(data)}
@@ -160,7 +162,9 @@ export default function Ticket(props: TicketPageProps) {
     }
 
     useEffect(() => {
-        settotalPage(Math.ceil(totalData / 10))
+        const newTotalPage = Math.ceil(totalData / 10);
+        settotalPage(newTotalPage)
+        setcurrentPage(prev => newTotalPage < prev ? newTotalPage : prev)
     }, [totalData])
 
     return (

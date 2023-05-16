@@ -162,6 +162,7 @@ input:placeholder-shown~.floating-label {
     cursor: pointer;
 }
 
+
 .table-row:hover .exp-ticket {
     display: block;
 }

@@ -73,21 +73,23 @@ export default function DetailHeader(props: DetailHeaderProps) {
     const handleProcess = (event?: any) => {
         setloadingProcess(true);
         closeAlert();
-        AuthApi.put(`/ticket/${detail.id ?? -1}/process`).then(res => {
+        const status: string = detail.status === 'open' ? 'process' : detail.status === 'process' ? 'feedback' : detail.status;
+
+        AuthApi.put(`/ticket/${detail.id ?? -1}/status`, { status }).then(res => {
             setAlert({
                 isActived: true,
                 code: 1,
                 title: "Updated",
-                message: "Status Ticket Berubah ke PROCESS!"
+                message: `Status Ticket Berubah ke ${status.toUpperCase()}!`
             })
-            setDetail((prev: any) => ({ ...prev, status: 'process' }))
+            setDetail((prev: any) => ({ ...prev, status }))
         }).catch(err => {
             console.log(err.response);
             setAlert({
                 isActived: true,
                 code: 0,
                 title: "Failed",
-                message: "Status Ticket Gagal berubah ke PROCESS!"
+                message: `Status Ticket Gagal berubah ke ${status.toUpperCase()}!`
             })
         }).finally(() => {
             setloadingProcess(false);
@@ -125,9 +127,10 @@ export default function DetailHeader(props: DetailHeaderProps) {
                                             ${detail?.status === "open" ? "text-green-500 bg-green-100" :
                                 detail?.status === "process" ? "text-secondary bg-secondary/20" :
                                     detail?.status === "done" ? "text-primary-500 bg-sky-200" :
-                                        'text-slate-500 bg-slate-200'
+                                        detail?.status === 'expired' ? 'text-red-500 bg-red-200' :
+                                            'text-slate-500 bg-slate-200'
                             }`}>
-                            {detail?.status ?? ''}
+                            {detail?.status ?? 'undifined'}
                         </div>
                     </div>
                 </div>
@@ -155,12 +158,12 @@ export default function DetailHeader(props: DetailHeaderProps) {
                             </div>
                         </div>
                     </div>
-                    <div>
+                    {detail.status === 'open' || detail.status === 'process' ? <div>
                         <Button className="rounded text-white items-center py-2 px-8 uppercase"
-                            onClick={handleProcess} loading={loadingProcess} disabled={detail.status === 'expired'}>
-                            Proses Ticket
+                            onClick={handleProcess} loading={loadingProcess}>
+                            {detail.status === 'process' ? 'Selesaikan Tiket' : 'Proses Ticket'}
                         </Button>
-                    </div>
+                    </div> : ''}
                     {/* <div className="divider-bottom" /> */}
                 </>
             ) :

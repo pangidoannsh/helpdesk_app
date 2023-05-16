@@ -47,7 +47,8 @@ export default function ListLayanan({ datas, handleNextPage, refSection, classNa
                                     ${data.status === "open" ? "text-green-500 bg-green-100" :
                                     data.status === "process" ? "text-secondary bg-secondary/20" :
                                         data.status === "done" ? "text-primary-500 bg-sky-200" :
-                                            'text-slate-500 bg-slate-200'
+                                            data.status === "expired" ? "text-red-500 bg-red-200" :
+                                                'text-slate-500 bg-slate-200'
                                 }`}>
                                 {data.status}
                             </div>
