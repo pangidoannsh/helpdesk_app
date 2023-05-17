@@ -29,7 +29,7 @@ export default function DetailHeader(props: DetailHeaderProps) {
     const [loadingSend, setloadingSend] = useState(false);
     const [loadingProcess, setloadingProcess] = useState(false);
 
-    function getSelect(value: any) {
+    function handleChangeResponse(value: any) {
         if (messageRef) {
             if (messageRef.current) {
                 messageRef.current.value = value;
@@ -176,7 +176,7 @@ export default function DetailHeader(props: DetailHeaderProps) {
                     <div className="flex gap-12 items-center">
                         <div className='text-slate-400 min-w-[90px]'>Balas Cepat</div>
                         <SelectNoBorder useSelect={[fastReply, setFastReply]} options={[nullResponse, ...responsesOptions ?? []]}
-                            catchSelect={getSelect} />
+                            onChange={handleChangeResponse} />
                     </div>
                     <div className="flex flex-col gap-4">
                         <TextArea placeholder='Ketikkan Pesan...' inputRef={messageRef} label="Balasan" className='rounded'

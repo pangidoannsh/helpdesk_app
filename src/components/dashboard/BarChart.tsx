@@ -3,31 +3,30 @@ import {
     Chart as ChartJS,
     CategoryScale,
     LinearScale,
-    PointElement,
-    LineElement,
+    BarElement,
     Title,
     Tooltip,
     Legend,
 } from 'chart.js';
-import { Line } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 
 ChartJS.register(
     CategoryScale,
     LinearScale,
-    PointElement,
-    LineElement,
+    BarElement,
     Title,
     Tooltip,
     Legend
 );
 
-interface LineChartProps {
+interface BarChartProps {
     labels: Array<string>,
     data: Array<any>
 }
-export default function LineChart(props: LineChartProps) {
+export default function BarChart(props: BarChartProps) {
     const { labels, data } = props;
-    return <Line
+
+    return <Bar
         options={{
             plugins: {
                 legend: {
@@ -41,15 +40,15 @@ export default function LineChart(props: LineChartProps) {
                 }
             }
         }}
-        data={{
-            labels,
-            datasets: [
-                {
-                    data,
-                    borderColor: 'rgba(0, 114, 190, 0.6)',
-                    backgroundColor: 'rgb(0, 114, 190)',
-                    animation: { duration: 500, easing: 'easeOutSine' },
-                }
-            ]
-        }} />;
+        data={
+            {
+                labels,
+                datasets: [
+                    {
+                        data,
+                        backgroundColor: 'rgb(0, 114, 190)',
+                    }
+                ],
+            }
+        } />;
 }
