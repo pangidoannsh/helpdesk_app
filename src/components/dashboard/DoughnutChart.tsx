@@ -27,7 +27,7 @@ export default function DoughnutChart(props: DoughnutChartProps) {
                         datasets: [
                             {
                                 label: '# of Votes',
-                                data: [55, 35, 10],
+                                data: labels.map(label=>label.count),
                                 backgroundColor: [
                                     'rgb(0, 114, 190)',
                                     'rgb(238, 157, 43)',
@@ -40,12 +40,12 @@ export default function DoughnutChart(props: DoughnutChartProps) {
                     }} />
             </div>
             <div className='flex justify-between w-full'>
-                {labels.map((data, index) => (
+                {labels.map((label, index) => (
                     <div className='flex gap-3 ' key={index}>
-                        <div className={`rounded-full w-2 h-2 relative top-1 ${data.color}`}></div>
+                        <div className={`rounded-full w-2 h-2 relative top-1 ${label.color}`}></div>
                         <div className='flex flex-col gap-1'>
-                            <div className="font-medium text-xs text-slate-400">{data.label}</div>
-                            <div className='text-slate-800 font-medium'>100</div>
+                            <div className="font-medium text-xs text-slate-400">{label.label}</div>
+                            <div className='text-slate-800 font-medium'>{label.count}</div>
                         </div>
                     </div>
                 ))}

@@ -1,14 +1,9 @@
-import Button from "@/components/ui/Button";
-import Modal from "@/components/ui/Modal";
 import CommonLayout from "@/components/layouts/Common";
 import AuthApi from "@/services/authApi";
-import { Icon } from "@iconify/react";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import CreateTicket from "../CreateTicket";
 import ContentLayanan from "./ContentLayanan";
 import Search from "@/components/dashboard/ticket/Search";
-import Card from "@/components/ui/Card";
 import { AxiosError } from "axios";
 
 

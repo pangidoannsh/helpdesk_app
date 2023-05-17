@@ -58,6 +58,8 @@ export default function CreateTicket(props: CreateTicketProps) {
             message: inputDescRef.current?.value,
             file: inputAttachment
         }
+        console.log(dataPost);
+        
         // console.log(dataPost);
         AuthApi.post('/ticket', dataPost).then(res => {
             if (setListData) {
