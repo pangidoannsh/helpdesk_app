@@ -1,3 +1,4 @@
+import BarChart from "@/components/dashboard/BarChart";
 import DoughnutChart from "@/components/dashboard/DoughnutChart";
 import LineChart from "@/components/dashboard/LineChart";
 import DashboardLayout from "@/components/layouts/Dashboard";
@@ -23,17 +24,21 @@ const feedbackLabels = [
     {
         label: 'Sangat Puas',
         color: 'bg-primary-600',
+<<<<<<< HEAD
         count:60
+=======
+        count: 60
+>>>>>>> f848e4e3d1b4408d67c2b554ffc4f38a77e93cb3
     },
     {
         label: 'Puas',
         color: 'bg-secondary',
-        count:30
+        count: 30
     },
     {
         label: 'Tidak Puas',
         color: 'bg-slate-400',
-        count:10
+        count: 10
     },
 ]
 
@@ -46,19 +51,19 @@ const yearOptions = eachYearInterval.map(date => ({ value: date.getFullYear(), d
 yearOptions.reverse();
 
 interface DashboardProps {
-    totalAgent: number,
     ticketCountEachStatus: any[],
-    dataMonthlyTicket: any[]
+    dataMonthlyTicket: any[],
+    agents: any[],
+    ticketComplete: any[]
 }
 export default function Dashboard(props: DashboardProps) {
-    console.log(props);
-    
     const [selectedYearMonthlyTicket, setSelectedYearMonthlyTicket] = useState(() => {
         const date = new Date();
         return yearOptions.find(year => year.value === date.getFullYear());
     })
     const [ticketCountEachStatus, setTicketCountEachStatus] = useState<any>(props.ticketCountEachStatus)
     const [dataMonthlyTicket, setDataMonthlyTicket] = useState<any>(props.dataMonthlyTicket);
+    const [ticketComplete, setTicketComplete] = useState<any>(props.ticketComplete);
 
     function handleChangeSleectedMonthlyTicket(value: any) {
         getMonthlyTicketCount(value)
@@ -113,7 +118,11 @@ export default function Dashboard(props: DashboardProps) {
                     </Card>
                     <Card className="flex flex-col p-9 rounded gap-6">
                         <h3 className='text-xl font-medium text-primary-700 uppercase'>rata-rata penyelesaian tiket</h3>
-                        <LineChart data={dataMonthlyTicket} labels={monthLabels} />
+                        <BarChart data={props.agents.map(agent => {
+                            // console.log(ticketComplete);
+
+                            return ticketComplete.find((ticket: any) => ticket.agentId === agent.id)?.timeRate ?? 0
+                        })} labels={props.agents.map(agent => agent.name)} />
                     </Card>
                 </div>
                 <div className="flex flex-col col-span-3 lg:col-span-1 gap-6 order-1 lg:order-2">
@@ -127,7 +136,7 @@ export default function Dashboard(props: DashboardProps) {
                         <h3 className='text-xl font-medium text-primary-700 uppercase'>Agen</h3>
                         <div className="flex flex-col gap-2">
                             <div className="text-sm text-slate-400">Jumlah Agen :</div>
-                            <div className="text-6xl text-primary-700">{props.totalAgent}</div>
+                            <div className="text-6xl text-primary-700">{props.agents.length}</div>
                         </div>
                         <Icon icon='mdi:face-agent' className="absolute text-primary-600/10 top-4 right-0 
                         translate-x-10 text-[172px]" />
@@ -149,15 +158,6 @@ export async function getServerSideProps(context: any) {
         };
     }
 
-    let totalAgent: number = 0;
-    await api.get("/user/agent/count", {
-        headers: { Authorization: `Bearer ${token}` }
-    }).then(res => {
-        totalAgent = res.data
-    }).catch(err => {
-
-    })
-
     let ticketCountEachStatus: any[] = [];
     await api.get("/ticket/count/status", {
         headers: { Authorization: `Bearer ${token}` }
@@ -175,11 +175,29 @@ export async function getServerSideProps(context: any) {
     }).catch(err => {
 
     })
+
+    let agents: string[] = [];
+    await api.get("/user/agent", {
+        headers: { Authorization: `Bearer ${token}` }
+    }).then(res => {
+        agents = res.data
+    }).catch(err => {
+    })
+
+    let ticketComplete: any[] = [];
+    await api.get("ticket/completion-rate", {
+        headers: { Authorization: `Bearer ${token}` }
+    }).then(res => {
+        ticketComplete = res.data
+    }).catch(err => {
+
+    })
     return {
         props: {
-            totalAgent,
             ticketCountEachStatus,
-            dataMonthlyTicket
+            dataMonthlyTicket,
+            agents,
+            ticketComplete
         }
     }
 }

@@ -5,8 +5,7 @@ import { Doughnut } from 'react-chartjs-2';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface DoughnutChartProps {
-    labels: Array<any>,
-
+    labels: Array<any>
 }
 
 export default function DoughnutChart(props: DoughnutChartProps) {
@@ -27,7 +26,7 @@ export default function DoughnutChart(props: DoughnutChartProps) {
                         datasets: [
                             {
                                 label: '# of Votes',
-                                data: labels.map(label=>label.count),
+                                data: labels.map(label => label.count),
                                 backgroundColor: [
                                     'rgb(0, 114, 190)',
                                     'rgb(238, 157, 43)',
