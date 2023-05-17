@@ -24,11 +24,7 @@ const feedbackLabels = [
     {
         label: 'Sangat Puas',
         color: 'bg-primary-600',
-<<<<<<< HEAD
-        count:60
-=======
         count: 60
->>>>>>> f848e4e3d1b4408d67c2b554ffc4f38a77e93cb3
     },
     {
         label: 'Puas',
