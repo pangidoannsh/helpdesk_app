@@ -25,6 +25,7 @@ interface BarChartProps {
 }
 export default function BarChart(props: BarChartProps) {
     const { labels, data } = props;
+    console.log(data);
 
     return <Bar
         options={{

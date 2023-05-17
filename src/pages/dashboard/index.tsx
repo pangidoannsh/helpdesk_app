@@ -14,10 +14,11 @@ import { useEffect, useState } from "react";
 const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Juni', 'Juli', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
 
 const status = [
-    { status: 'open', icon: 'material-symbols:mail' },
-    { status: 'process', icon: 'uil:process' },
-    { status: 'done', icon: 'material-symbols:done-rounded' },
-    { status: 'expired', icon: 'material-symbols:timer-off' },
+    { status: 'open', icon: 'material-symbols:mail', label: 'ticket open' },
+    { status: 'process', icon: 'uil:process', label: 'sedang proses' },
+    { status: 'feedback', icon: 'fluent:person-feedback-16-filled', label: 'menunggu feedback' },
+    { status: 'done', icon: 'material-symbols:done-rounded', label: 'ticket selesai' },
+    { status: 'expired', icon: 'material-symbols:timer-off', label: 'ticket expired' },
 ]
 
 const feedbackLabels = [
@@ -85,11 +86,11 @@ export default function Dashboard(props: DashboardProps) {
 
     return (
         <DashboardLayout title="Dashboard | Helpdesk IT" content="dashboard helpdesk it">
-            <div className="grid grid-cols-4 gap-6">
+            <div className="grid grid-cols-3 lg:grid-cols-5 gap-6">
                 {status.map((data, index) => (
-                    <Card className="p-9 rounded flex justify-between" key={index}>
+                    <Card className="xl:p-9 p-6 rounded flex justify-between" key={index}>
                         <div className="uppercase">
-                            <div className="text-sm font-open-sans text-slate-500">tiket {data.status}</div>
+                            <div className="text-sm font-open-sans text-slate-500">{data.label}</div>
                             <div className="text-2xl font-open-sans text-slate-600">
                                 {ticketCountEachStatus?.find((ticket: any) => ticket.status === data.status)?.count ?? 0}
                             </div>

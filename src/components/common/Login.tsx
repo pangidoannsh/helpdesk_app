@@ -46,6 +46,11 @@ export default function Login(props: LoginProps) {
                 title: "Success",
                 message: "Login Berhasil"
             });
+            if (res.data.user_data.level !== 'pegawai') {
+                setTimeout(() => {
+                    router.push('/dashboard')
+                }, 1000);
+            }
             setTimeout(() => {
                 closeAlert();
             }, 2000);
