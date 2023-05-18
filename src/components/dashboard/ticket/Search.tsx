@@ -3,8 +3,8 @@ import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input'
 import Select from '@/components/ui/Select';
 import { api } from '@/config/api';
-import AuthApi from '@/services/authApi';
 import React, { RefObject, useEffect, useRef, useState } from 'react'
+import { useRouter } from 'next/router';
 
 const statusOptions = [
     { value: null, display: "Semua Status" },
@@ -27,10 +27,11 @@ interface SearchProps {
     functionSearch: (query: string) => void;
     className?: string;
     withoutFungsi?: boolean;
-    defaultStatus?: string;
 }
 export default function Search(props: SearchProps) {
-    const { border, functionSearch, defaultStatus } = props;
+    const router = useRouter();
+
+    const { border, functionSearch } = props;
 
     const subjectRef = useRef<HTMLInputElement>(null);
     const [categoryOptions, setcategoryOptions] = useState<any>([]);
@@ -38,12 +39,32 @@ export default function Search(props: SearchProps) {
 
     const [categoryInput, setCategoryInput] = useState({ value: null, display: "Semua Kategori" })
 
-    const [statusInput, setStatusInput] = useState({
-        value: defaultStatus ?? null,
-        display: defaultStatus?.toUpperCase() ?? "Semua Status"
+    const [statusInput, setStatusInput] = useState(() => {
+        const statusValue = router.query.status;
+        const status = statusOptions.find(data => data.value === statusValue)
+        if (statusValue && status) {
+            return {
+                value: status.value,
+                display: status.display
+            }
+        }
+        return {
+            value: null,
+            display: "Semua Status"
+        }
     })
 
-    const [priorityInput, setPriorityInput] = useState({ value: null, display: "Semua Prioritas" })
+    const [priorityInput, setPriorityInput] = useState(() => {
+        const priorityValue = router.query.priority;
+        const priority = priorityOptions.find(data => data.value === priorityValue)
+        if (priorityValue && priority) {
+            return {
+                value: priority.value,
+                display: priority.display
+            }
+        }
+        return { value: null, display: "Semua Prioritas" }
+    })
     const [fungsiInput, setFungsiInput] = useState({ value: null, display: "Semua Fungsi" })
 
     const [searchLoading, setSearchLoading] = useState(false);
@@ -56,11 +77,18 @@ export default function Search(props: SearchProps) {
         if (statusInput.value) query += `status=${statusInput.value}&`;
         if (priorityInput.value) query += `priority=${priorityInput.value}&`;
         if (fungsiInput.value) query += `fungsi=${fungsiInput.value}&`;
-
+        router.push(`ticket?${query.slice(0, -1)}`)
         functionSearch(query);
     }
     useEffect(() => {
         api.get('/category').then(res => {
+            const categoryId = router.query.category
+            if (categoryId) {
+                const category = res.data.find((data: any) => data.id === categoryId)
+                if (category) {
+                    setCategoryInput({ value: category.id, display: category.categoryName })
+                }
+            }
             setcategoryOptions([{ value: null, display: "Semua Kategori" },
             ...res.data.map((data: any) => ({ value: data.id, display: data.categoryName }))]);
         }).catch(err => {
@@ -68,10 +96,18 @@ export default function Search(props: SearchProps) {
         })
         if (!props.withoutFungsi) {
             api.get('/fungsi').then(res => {
+                const fungsiId = router.query.fungsi
+                if (fungsiId) {
+                    const fungsi = res.data.find((data: any) => data.id == fungsiId)
+                    if (fungsi) {
+                        setFungsiInput({ value: fungsi.id, display: fungsi.name.toUpperCase() })
+                    }
+                }
                 setfungsiOptions([{ value: null, display: "Semua Fungsi" },
                 ...res.data.map((data: any) => ({ value: data.id, display: data.name.toUpperCase() }))]);
             })
         }
+
     }, []);
 
     return (

@@ -1,7 +1,7 @@
 import AuthApi from '@/services/authApi';
 import React, { ReactNode, useEffect, useState } from 'react'
 
-interface User {
+export interface User {
   id?: any;
   name?: string;
   level?: string;

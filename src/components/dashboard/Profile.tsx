@@ -41,12 +41,12 @@ export default function Profile() {
                                 </Link>
                             </Menu.Item>
                             <Menu.Item >
-                                <button
+                                <Link href="/profile"
                                     className="text-slate-500 group flex w-full items-center rounded px-4 py-2
                                             hover:bg-primary-500/5 hover:text-primary-500 gap-1">
                                     <Icon icon="fa6-solid:user-gear" className='text-lg' />
                                     <span>Profile</span>
-                                </button>
+                                </Link>
                             </Menu.Item>
                         </Menu.Items>
                     </Transition>

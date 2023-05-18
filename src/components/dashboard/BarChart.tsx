@@ -25,7 +25,6 @@ interface BarChartProps {
 }
 export default function BarChart(props: BarChartProps) {
     const { labels, data } = props;
-    console.log(data);
 
     return <Bar
         options={{
@@ -46,7 +45,7 @@ export default function BarChart(props: BarChartProps) {
                 labels,
                 datasets: [
                     {
-                        data,
+                        data: data.map(d => Math.ceil(d)),
                         backgroundColor: 'rgb(0, 114, 190)',
                     }
                 ],

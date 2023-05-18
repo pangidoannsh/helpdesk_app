@@ -8,6 +8,7 @@ import { api } from "@/config/api";
 import AuthApi from "@/services/authApi";
 import { Icon } from "@iconify/react";
 import { eachYearOfInterval } from "date-fns";
+import { useRouter } from "next/router";
 import { parseCookies } from "nookies";
 import { useEffect, useState } from "react";
 
@@ -16,7 +17,7 @@ const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Juni', 'Juli', 'Agu', '
 const status = [
     { status: 'open', icon: 'material-symbols:mail', label: 'ticket open' },
     { status: 'process', icon: 'uil:process', label: 'sedang proses' },
-    { status: 'feedback', icon: 'fluent:person-feedback-16-filled', label: 'menunggu feedback' },
+    { status: 'feedback', icon: 'fluent:person-feedback-48-filled', label: 'menunggu feedback' },
     { status: 'done', icon: 'material-symbols:done-rounded', label: 'ticket selesai' },
     { status: 'expired', icon: 'material-symbols:timer-off', label: 'ticket expired' },
 ]
@@ -54,6 +55,8 @@ interface DashboardProps {
     ticketComplete: any[]
 }
 export default function Dashboard(props: DashboardProps) {
+    const router = useRouter();
+
     const [selectedYearMonthlyTicket, setSelectedYearMonthlyTicket] = useState(() => {
         const date = new Date();
         return yearOptions.find(year => year.value === date.getFullYear());
@@ -74,24 +77,29 @@ export default function Dashboard(props: DashboardProps) {
             console.log(err);
         })
     }
-    useEffect(() => {
-        // getMonthlyTicketCount();
-        // AuthApi.get('/ticket/count/status').then(res => {
-        //     setTicketCountEachStatus(res.data)
-        // }).catch(err => {
-        //     console.log(err);
-        // })
-    }, [])
+
+    function handleClickStatus(status: string) {
+        router.push('dashboard/ticket?status=' + status)
+    }
+    // useEffect(() => {
+    //     getMonthlyTicketCount();
+    //     AuthApi.get('/ticket/count/status').then(res => {
+    //         setTicketCountEachStatus(res.data)
+    //     }).catch(err => {
+    //         console.log(err);
+    //     })
+    // }, [])
 
 
     return (
         <DashboardLayout title="Dashboard | Helpdesk IT" content="dashboard helpdesk it">
             <div className="grid grid-cols-3 lg:grid-cols-5 gap-6">
                 {status.map((data, index) => (
-                    <Card className="xl:p-9 p-6 rounded flex justify-between" key={index}>
+                    <Card className="xl:p-9 p-6 rounded flex justify-between" key={index}
+                        onClick={() => handleClickStatus(data.status)}>
                         <div className="uppercase">
-                            <div className="text-sm font-open-sans text-slate-500">{data.label}</div>
-                            <div className="text-2xl font-open-sans text-slate-600">
+                            <div className="text-sm font-open-sans text-slate-500">tiket {data.status}</div>
+                            <div className="text-4xl font-open-sans text-slate-600">
                                 {ticketCountEachStatus?.find((ticket: any) => ticket.status === data.status)?.count ?? 0}
                             </div>
                         </div>
@@ -115,11 +123,9 @@ export default function Dashboard(props: DashboardProps) {
                     </Card>
                     <Card className="flex flex-col p-9 rounded gap-6">
                         <h3 className='text-xl font-medium text-primary-700 uppercase'>rata-rata penyelesaian tiket</h3>
-                        <BarChart data={props.agents.map(agent => {
-                            // console.log(ticketComplete);
-
-                            return ticketComplete.find((ticket: any) => ticket.agentId === agent.id)?.timeRate ?? 0
-                        })} labels={props.agents.map(agent => agent.name)} />
+                        <span className="text-xs text-slate-500 relative top-4 -mt-2">Jam</span>
+                        <BarChart data={props.agents.map(agent => ticketComplete.find((ticket: any) => ticket.agentId === agent.id)?.timeRate ?? 0)}
+                            labels={props.agents.map(agent => agent.name)} />
                     </Card>
                 </div>
                 <div className="flex flex-col col-span-3 lg:col-span-1 gap-6 order-1 lg:order-2">
@@ -185,6 +191,8 @@ export async function getServerSideProps(context: any) {
     await api.get("ticket/completion-rate", {
         headers: { Authorization: `Bearer ${token}` }
     }).then(res => {
+        // console.log(res.data);
+
         ticketComplete = res.data
     }).catch(err => {
 

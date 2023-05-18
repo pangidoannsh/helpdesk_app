@@ -50,7 +50,7 @@ export default function DetailHeader(props: DetailHeaderProps) {
                 // setDataMessage((prev: any) => [...prev, res.data]);
                 messageRef.current ? messageRef.current.value = "" : '';
                 setFastReply(nullResponse);
-                if (detail?.status ?? 'open' === 'open') {
+                if (detail.status === 'open') {
                     handleProcess();
                 }
             }).catch(err => {
@@ -109,12 +109,14 @@ export default function DetailHeader(props: DetailHeaderProps) {
                     onClick={() => setIsGeneral(true)}>
                     general
                 </button>
-                <button className={`rounded-t border-t border-x uppercase text-sm p-2 translate-y-[1px]
+                {!'feedback done expired'.includes(detail.status) ? (
+                    <button className={`rounded-t border-t border-x uppercase text-sm p-2 translate-y-[1px]
                                 ${!isGeneral ? "border-slate-400 text-slate-500 bg-white" :
-                        "border-transparent text-primary-700"}`}
-                    onClick={() => setIsGeneral(false)}>
-                    balas
-                </button>
+                            "border-transparent text-primary-700"}`}
+                        onClick={() => setIsGeneral(false)}>
+                        balas
+                    </button>
+                ) : ''}
             </div>
             {/* Title */}
             <div className="flex flex-col gap-2">

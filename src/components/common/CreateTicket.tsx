@@ -22,8 +22,9 @@ const displayEmployee = (data: any) => {
     return {
         value: data.id, display: <div className="flex gap-9">
             <span>{data.name}</span>
-            <span>{data.fungsi}</span>
-        </div>
+            <span className="uppercase">{data.fungsi?.name ?? 'undifined'}</span>
+        </div>,
+        fungsiId: data.fungsi.id
     }
 }
 export default function CreateTicket(props: CreateTicketProps) {
@@ -32,7 +33,7 @@ export default function CreateTicket(props: CreateTicketProps) {
     const { setAlert, closeAlert } = useContext(AlertContext)
     const [loadingCreate, setloadingCreate] = useState(false);
 
-    const [employeeOtpions, setEmployeeOtpions] = useState([]);
+    const [employeeOtpions, setEmployeeOtpions] = useState<Array<any>>([]);
     const [categoryOptions, setCategoryOptions] = useState([]);
 
     const [inputEmployee, setinputEmployee] = useState({ value: null, display: "Pegawai" });
@@ -49,17 +50,21 @@ export default function CreateTicket(props: CreateTicketProps) {
     function handleCreate(e: any) {
         setloadingCreate(true);
         closeAlert();
+        const pegawaiFungsiId = employeeOtpions.find(employee => employee.value == inputEmployee.value)?.fungsiId ?? null
+        console.log(pegawaiFungsiId);
 
         const dataPost = {
-            fungsiId: user.fungsi?.id ?? -1,
+            fungsiId: user.level === 'pegawai' ? user.fungsi?.id ?? -1
+                : pegawaiFungsiId,
             category: inputCategory.value,
             priority: inputPriority.value,
             subject: inputSubjectRef.current?.value,
             message: inputDescRef.current?.value,
-            file: inputAttachment
+            file: inputAttachment,
+            userOrdererId: user.level !== 'pegawai' ? inputEmployee.value : null
         }
         console.log(dataPost);
-        
+
         // console.log(dataPost);
         AuthApi.post('/ticket', dataPost).then(res => {
             if (setListData) {
@@ -72,49 +77,46 @@ export default function CreateTicket(props: CreateTicketProps) {
                 title: "Success",
                 message: "Layanan Berhasil diajukan, silahkan ke halaman Layanan untuk melihat respon agen"
             })
+        }).catch(err => {
+            console.log(err);
+            if (err.response) {
+                if (err.response.status === 400) {
+                    setAlert({
+                        isActived: true,
+                        code: 0,
+                        title: `Error ${err.response.status}`,
+                        message: "Pastikan Semua Kolom input terisi!"
+                    })
+                } else {
+                    setAlert({
+                        isActived: true,
+                        code: 0,
+                        title: `Error ${err.response.status}`,
+                        message: "Layanan Gagal diajukan!"
+                    })
+                }
+            }
+        }).finally(() => {
+            setloadingCreate(false);
             setTimeout(() => {
                 closeAlert();
             }, 3000);
-        }).catch(err => {
-            console.log(err);
-            if (err.response.status === 400) {
-                setAlert({
-                    isActived: true,
-                    code: 0,
-                    title: `Error ${err.response.status}`,
-                    message: "Pastikan Semua Kolom input terisi!"
-                })
-            } else {
-                setAlert({
-                    isActived: true,
-                    code: 0,
-                    title: `Error ${err.response.status}`,
-                    message: "Layanan Gagal diajukan!"
-                })
-            }
-        }).finally(() => setloadingCreate(false))
+        })
     }
 
-    let isMounted = false;
     useEffect(() => {
-        if (!isMounted) {
-            AuthApi.get('/category').then(res => {
-                setCategoryOptions(res.data.map((data: any) => ({ value: data.id, display: data.categoryName })))
-            }).catch(err => {
-                console.log(err);
-            })
-            console.log(user);
+        AuthApi.get('/category').then(res => {
+            setCategoryOptions(res.data.map((data: any) => ({ value: data.id, display: data.categoryName })))
+        }).catch(err => {
+            console.log(err);
+        })
 
-            if (user.level !== "pegawai") {
-                AuthApi.get('user/employee').then(res => {
-                    setEmployeeOtpions(res.data.map((data: any) => displayEmployee(data)));
-                }).catch(err => {
-                    console.log(err.response);
-                })
-            }
-        }
-        return () => {
-            isMounted = true;
+        if (user.level !== "pegawai") {
+            AuthApi.get('user/employee').then(res => {
+                setEmployeeOtpions(res.data.map((data: any) => displayEmployee(data)));
+            }).catch(err => {
+                console.log(err.response);
+            })
         }
     }, [])
 

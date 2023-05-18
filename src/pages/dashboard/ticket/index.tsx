@@ -12,10 +12,13 @@ import Converter from '@/utils/converter';
 import { Icon } from '@iconify/react';
 import Modal from '@/components/ui/Modal';
 import { AlertContext } from '@/context/AlertProvider';
+import { useRouter } from 'next/router';
+import { GetServerSidePropsContext } from 'next';
 
 interface TicketPageProps {
-    dataTicket: Array<any>;
+    dataTicket: Array<any>
     totalData: number
+    query: string
 }
 
 const columnTable = [
@@ -28,6 +31,8 @@ const columnTable = [
 ];
 
 export default function Ticket(props: TicketPageProps) {
+    const router = useRouter();
+
     const displayData = (data: any) => {
         return {
             ...data, priority: data.priority.toUpperCase() ?? data.priority, category: data.category.categoryName,
@@ -65,15 +70,15 @@ export default function Ticket(props: TicketPageProps) {
     const [currentPage, setcurrentPage] = useState(1);
     const [loadingTable, setloadingTable] = useState(false);
     const [pageFetched, setPageFetched] = useState([1]);
-    const [filterQuery, setFilterQuery] = useState("");
+    const [filterQuery, setFilterQuery] = useState(props.query);
     const [ticketDelete, setTicketDelete] = useState<any>(null);
     const [openModalDelete, setopenModalDelete] = useState(false)
 
     function handleSearch(query: string) {
+        setloadingTable(true);
         setFilterQuery(query);
         setcurrentPage(1);
         setPageFetched([1])
-        setloadingTable(true);
         AuthApi.get(`/ticket?limit=10&${query}`).then(res => {
             setTicketData(res.data.map((data: any) => displayData(data)))
             AuthApi.get(`/ticket/length?${query}`).then(res => {
@@ -167,6 +172,21 @@ export default function Ticket(props: TicketPageProps) {
         setcurrentPage(prev => newTotalPage < prev ? newTotalPage : prev)
     }, [totalData])
 
+    // useEffect(() => {
+    //     const { status, subject, category, priority, fungsi } = router.query;
+    //     if (status || subject || category || priority || fungsi) {
+    //         let query: string = "";
+    //         if (subject) query += `subject=${subject}&`;
+    //         if (category) query += `category=${category}&`;
+    //         if (status) query += `status=${status}&`;
+    //         if (priority) query += `priority=${priority}&`;
+    //         if (fungsi) query += `fungsi=${fungsi}&`;
+    //         setFilterQuery(query)
+    //     } else {
+    //         console.log('query not exist');
+    //     }
+    // }, [])
+
     return (
         <DashboardLayout title='Tiket | Helpdesk Dashboard'>
             <Search border='rounded' functionSearch={handleSearch} />
@@ -194,7 +214,16 @@ export default function Ticket(props: TicketPageProps) {
     )
 }
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+    const { status, subject, category, priority, fungsi } = context.query;
+
+    let query: string = "";
+    if (subject) query += `subject=${subject}&`;
+    if (category) query += `category=${category}&`;
+    if (status) query += `status=${status}&`;
+    if (priority) query += `priority=${priority}&`;
+    if (fungsi) query += `fungsi=${fungsi}&`;
+
     const token = parseCookies(context).jwt;
     if (!token) {
         return {
@@ -208,7 +237,7 @@ export async function getServerSideProps(context: any) {
     let dataTicket: any = [];
     let totalData: number = 0;
     // secara default hanya akan mengambil data dengan status open
-    await api.get("/ticket?limit=10", {
+    await api.get("/ticket?limit=10&" + query, {
         headers: { Authorization: `Bearer ${token}` }
     }).then(res => {
         dataTicket = res.data
@@ -227,7 +256,8 @@ export async function getServerSideProps(context: any) {
     return {
         props: {
             dataTicket,
-            totalData
+            totalData,
+            query
         }
     }
 }

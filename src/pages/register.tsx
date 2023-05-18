@@ -43,7 +43,7 @@ export default function RegisterPage(props: RegisterProps) {
 
         api.post('/user/register', dataCreate).then(res => {
             alert('register berhasil!')
-            router.push('/')
+            // router.push('/')
         }).catch(err => {
             console.log(err.response);
         }).finally(() => setLoadingSubmit(false))
