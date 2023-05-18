@@ -84,6 +84,13 @@ export default function Layanan(props: LayananProps) {
 
     }, [slug]);
 
+    useEffect(() => {
+        if (detailLayanan) {
+            console.log('mount');
+            setListLayanan(listLayanan.map((ticket: any) => ticket.id === detailLayanan.id ? detailLayanan : ticket))
+        }
+    }, [detailLayanan])
+
     return (
         <CommonLayout title='Layanan | HELPDESK BPS Riau' content='layanan helpdesk bps riau'>
             <div className="flex flex-col gap-6 min-h-screen bg-[#F8F8F8] px-2 md:px-12 xl:px-36 py-6">
@@ -92,7 +99,8 @@ export default function Layanan(props: LayananProps) {
                     functionSearch={handleSearch} withoutFungsi />
 
                 <ContentLayanan datas={listLayanan} handleNextPage={handleNextPage} detail={detailLayanan} refSection={filterSection} isOpenDetail={isOpenDetail}
-                    loadingDetail={loadingDetail} listMessages={listMessages} setListMessages={setListMessages} />
+                    loadingDetail={loadingDetail} listMessages={listMessages} setListMessages={setListMessages}
+                    setDetail={setDetailLayanan} />
             </div>
         </CommonLayout>
     )

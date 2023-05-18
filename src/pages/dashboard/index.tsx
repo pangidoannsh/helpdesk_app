@@ -22,24 +22,6 @@ const status = [
     { status: 'expired', icon: 'material-symbols:timer-off', label: 'ticket expired' },
 ]
 
-const feedbackLabels = [
-    {
-        label: 'Sangat Puas',
-        color: 'bg-primary-600',
-        count: 60
-    },
-    {
-        label: 'Puas',
-        color: 'bg-secondary',
-        count: 30
-    },
-    {
-        label: 'Tidak Puas',
-        color: 'bg-slate-400',
-        count: 10
-    },
-]
-
 const eachYearInterval = eachYearOfInterval({
     start: new Date(2020, 1, 1),
     end: new Date()
@@ -52,11 +34,18 @@ interface DashboardProps {
     ticketCountEachStatus: any[],
     dataMonthlyTicket: any[],
     agents: any[],
-    ticketComplete: any[]
+    ticketComplete: any[],
+    feedbackRate: any[]
 }
 export default function Dashboard(props: DashboardProps) {
+
     const router = useRouter();
 
+    const [feedbackRate, setFeedbackRate] = useState(props.feedbackRate.map(feedback => ({
+        ...feedback,
+        color: feedback.value === 3 ? 'bg-primary-600' : feedback.value === 2 ? 'bg-secondary' : 'bg-slate-400',
+        rgb: feedback.value === 3 ? 'rgb(0, 114, 190)' : feedback.value === 2 ? 'rgb(238, 157, 43)' : 'rgb(148, 163, 184)',
+    })))
     const [selectedYearMonthlyTicket, setSelectedYearMonthlyTicket] = useState(() => {
         const date = new Date();
         return yearOptions.find(year => year.value === date.getFullYear());
@@ -95,7 +84,7 @@ export default function Dashboard(props: DashboardProps) {
         <DashboardLayout title="Dashboard | Helpdesk IT" content="dashboard helpdesk it">
             <div className="grid grid-cols-3 lg:grid-cols-5 gap-6">
                 {status.map((data, index) => (
-                    <Card className="xl:p-9 p-6 rounded flex justify-between" key={index}
+                    <Card className="xl:p-9 p-6 rounded flex justify-between border hover:border-primary-500" key={index}
                         onClick={() => handleClickStatus(data.status)}>
                         <div className="uppercase">
                             <div className="text-sm font-open-sans text-slate-500">tiket {data.status}</div>
@@ -119,20 +108,21 @@ export default function Dashboard(props: DashboardProps) {
                                     className='pr-6' options={yearOptions} onChange={handleChangeSleectedMonthlyTicket} />
                             </div>
                         </div>
-                        <LineChart data={dataMonthlyTicket} labels={monthLabels} />
+                        <span className="text-xs text-slate-400 relative top-4 -mt-6">Tiket</span>
+                        <LineChart data={dataMonthlyTicket} labels={monthLabels} labelHover="tiket masuk" />
                     </Card>
                     <Card className="flex flex-col p-9 rounded gap-6">
                         <h3 className='text-xl font-medium text-primary-700 uppercase'>rata-rata penyelesaian tiket</h3>
-                        <span className="text-xs text-slate-500 relative top-4 -mt-2">Jam</span>
+                        <span className="text-xs text-slate-400 relative top-4 -mt-6">Jam</span>
                         <BarChart data={props.agents.map(agent => ticketComplete.find((ticket: any) => ticket.agentId === agent.id)?.timeRate ?? 0)}
-                            labels={props.agents.map(agent => agent.name)} />
+                            labels={props.agents.map(agent => agent.name)} labelHover="rata-rata penyelesaian (jam)" />
                     </Card>
                 </div>
                 <div className="flex flex-col col-span-3 lg:col-span-1 gap-6 order-1 lg:order-2">
                     <Card className="flex flex-col p-9 rounded gap-6">
                         <h3 className='text-xl font-medium text-primary-700 uppercase'>feedback</h3>
                         <div className="flex flex-col gap-6 items-center">
-                            <DoughnutChart labels={feedbackLabels} />
+                            <DoughnutChart labels={feedbackRate} labelHover="total" />
                         </div>
                     </Card>
                     <Card className="flex flex-col p-9 rounded gap-2 relative overflow-hidden">
@@ -197,12 +187,22 @@ export async function getServerSideProps(context: any) {
     }).catch(err => {
 
     })
+
+    let feedbackRate: any[] = []
+    await api.get("feedback/count", {
+        headers: { Authorization: `Bearer ${token}` }
+    }).then(res => {
+        feedbackRate = res.data
+    }).catch(err => {
+
+    })
     return {
         props: {
             ticketCountEachStatus,
             dataMonthlyTicket,
             agents,
-            ticketComplete
+            ticketComplete,
+            feedbackRate
         }
     }
 }

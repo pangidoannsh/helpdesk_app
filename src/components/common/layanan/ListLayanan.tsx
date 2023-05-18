@@ -34,10 +34,11 @@ export default function ListLayanan({ datas, handleNextPage, refSection, classNa
                     <button
                         className={`flex p-4 rounded-lg md:p-6 justify-between shadow hover:bg-[#CAF9FD]/20
                  border hover:border-primary-500 text-start 
-                 ${data.slug.toString() === router.query.slug ? "border-primary-500 bg-[#CAF9FD]/20" : "border-transparent bg-white"}`}
+                 ${data.slug.toString() === router.query.slug ? "border-primary-500 bg-[#CAF9FD]/20" :
+                                "border-transparent bg-white"}`}
                         key={index} onClick={() => handleClick(data)}>
                         <div className='flex flex-col gap-1 max-w-[70%] xl:w-56'>
-                            <div className="font-bold text-primary-700 overflow-hidden truncate">{data.subject} pawdapwdk</div>
+                            <div className="font-bold text-primary-700 overflow-hidden truncate">{data.subject}</div>
                             <div className="text-sm text-slate-600">{data.category.categoryName}</div>
                             <div className="text-sm text-slate-600 uppercase">{data.priority}</div>
                             <div className="text-xs text-slate-600">{data.date}</div>

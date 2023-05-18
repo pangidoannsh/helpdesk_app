@@ -81,6 +81,7 @@ export default function Search(props: SearchProps) {
         functionSearch(query);
     }
     useEffect(() => {
+
         api.get('/category').then(res => {
             const categoryId = router.query.category
             if (categoryId) {
@@ -116,8 +117,8 @@ export default function Search(props: SearchProps) {
                 <h5 className='text-xl text-primary-600'>PENCARIAN</h5>
                 {!props.withoutFungsi ? <>
                     <div className="grid grid-cols-2 gap-6">
-                        <Input inputRef={subjectRef} icon="ic:baseline-search" placeholder='Semua Subjek' className={`${border} text-sm`}
-                            tagId='subject-input' />
+                        <Input inputRef={subjectRef} icon="ic:baseline-search" placeholder='Semua Subjek'
+                            className={`${border} text-sm`} tagId='subject-input' defaultValue={router.query.subject ?? ""} />
                         <Select useSelect={[categoryInput, setCategoryInput]} icon="bxs:category" className={`${border}`}
                             options={categoryOptions} />
                     </div>

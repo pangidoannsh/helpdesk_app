@@ -3,20 +3,21 @@ import Button from '@/components/ui/Button';
 import AuthApi from '@/services/authApi';
 import { Icon } from '@iconify/react';
 import { useRouter } from 'next/router';
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import TextArea from '../TextArea'
 import ListMessage from './ListMessage';
 import io from 'socket.io-client';
 import BASE_URL from '@/config/baseUrl';
-import { UserContext } from '@/context/UserProvider';
 import { format, parseISO } from 'date-fns';
 import { id } from 'date-fns/locale';
+import FeedbackRadio from '../FeedbackRadio';
 
 
 const socket = io(BASE_URL);
 
 interface DetailLayananProps {
     detailLayanan?: any;
+    setDetailLayanan: (detailLayanan: any) => void;
     listMessages?: Array<any>;
     setListMessages?: (listMessage: any) => void;
     loadingDetail: boolean;
@@ -24,7 +25,7 @@ interface DetailLayananProps {
 }
 
 export default function DetailLayanan({ detailLayanan, listMessages = [],
-    loadingDetail, setListMessages = () => { }, isOpenDetail }: DetailLayananProps) {
+    loadingDetail, setListMessages = () => { }, isOpenDetail, setDetailLayanan }: DetailLayananProps) {
     const { slug } = useRouter().query;
 
     const [isGeneral, setisGeneral] = useState(true);
@@ -87,13 +88,19 @@ export default function DetailLayanan({ detailLayanan, listMessages = [],
                                         onClick={() => setisGeneral(true)}>
                                         general
                                     </button>
-                                    <button className={`rounded-t-lg border-t border-x uppercase text-sm p-2 translate-y-[1px]
-                                ${!isGeneral ? "border-slate-400 text-slate-500 bg-white" :
-                                            "border-transparent text-primary-700"}`}
-                                        onClick={() => setisGeneral(false)}>
-                                        balas
-                                    </button>
+                                    {'open process'.includes(detailLayanan.status) ? (
+                                        <button className={`rounded-t-lg border-t border-x uppercase text-sm p-2 translate-y-[1px]
+                                    ${!isGeneral ? "border-slate-400 text-slate-500 bg-white" :
+                                                "border-transparent text-primary-700"}`}
+                                            onClick={() => setisGeneral(false)}>
+                                            balas
+                                        </button>
+                                    ) : ''}
                                 </div>
+                                {
+                                    detailLayanan.status === 'feedback' ? <FeedbackRadio ticketDetail={detailLayanan}
+                                        setTicketDetail={setDetailLayanan} /> : ''
+                                }
                                 {/* Title */}
                                 <div className="flex flex-col gap-2">
                                     <div className="flex gap-6">

@@ -23,10 +23,11 @@ ChartJS.register(
 
 interface LineChartProps {
     labels: Array<string>,
-    data: Array<any>
+    data: Array<any>,
+    labelHover: string
 }
 export default function LineChart(props: LineChartProps) {
-    const { labels, data } = props;
+    const { labels, data, labelHover } = props;
     return <Line
         options={{
             plugins: {
@@ -45,6 +46,7 @@ export default function LineChart(props: LineChartProps) {
             labels,
             datasets: [
                 {
+                    label: labelHover,
                     data,
                     borderColor: 'rgba(0, 114, 190, 0.6)',
                     backgroundColor: 'rgb(0, 114, 190)',

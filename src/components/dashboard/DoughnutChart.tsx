@@ -5,11 +5,12 @@ import { Doughnut } from 'react-chartjs-2';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface DoughnutChartProps {
-    labels: Array<any>
+    labels: Array<any>,
+    labelHover: string
 }
 
 export default function DoughnutChart(props: DoughnutChartProps) {
-    const { labels } = props
+    const { labels, labelHover } = props
     return (
         <>
             <div style={{ width: '300px', height: '300px' }}>
@@ -25,13 +26,9 @@ export default function DoughnutChart(props: DoughnutChartProps) {
                         labels: labels.map(data => data.label),
                         datasets: [
                             {
-                                label: '# of Votes',
+                                label: labelHover,
                                 data: labels.map(label => label.count),
-                                backgroundColor: [
-                                    'rgb(0, 114, 190)',
-                                    'rgb(238, 157, 43)',
-                                    'rgb(148, 163, 184)',
-                                ],
+                                backgroundColor: labels.map(label => label.rgb),
                                 animation: { duration: 500, easing: 'easeOutSine' },
 
                             },

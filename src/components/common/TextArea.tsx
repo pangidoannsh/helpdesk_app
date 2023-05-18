@@ -13,6 +13,7 @@ interface TextAreaProps {
 }
 export default function TextArea(props: TextAreaProps) {
     const { labelClass } = props;
+
     const handleChange = (e: any) => {
         props.setValue ? props.setValue(e.target.value) : ''
     }

@@ -21,10 +21,11 @@ ChartJS.register(
 
 interface BarChartProps {
     labels: Array<string>,
-    data: Array<any>
+    data: Array<any>,
+    labelHover: string
 }
 export default function BarChart(props: BarChartProps) {
-    const { labels, data } = props;
+    const { labels, data, labelHover } = props;
 
     return <Bar
         options={{
@@ -45,6 +46,7 @@ export default function BarChart(props: BarChartProps) {
                 labels,
                 datasets: [
                     {
+                        label: labelHover,
                         data: data.map(d => Math.ceil(d)),
                         backgroundColor: 'rgb(0, 114, 190)',
                     }

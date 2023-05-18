@@ -5,6 +5,7 @@ interface LayananProps {
     datas: Array<any>;
     handleNextPage: () => void;
     detail: any;
+    setDetail: (detail: any) => void
     listMessages: Array<any>;
     setListMessages?: (listMessage: any) => void;
     refSection: any;
@@ -13,13 +14,13 @@ interface LayananProps {
 }
 
 export default function ContentLayanan({ datas, handleNextPage, detail, refSection, loadingDetail,
-    listMessages, setListMessages, isOpenDetail }: LayananProps) {
+    listMessages, setListMessages, isOpenDetail, setDetail }: LayananProps) {
 
     return (
         <div className="flex gap-4">
             <ListLayanan datas={datas} handleNextPage={handleNextPage} refSection={refSection} className={`${isOpenDetail ? 'hidden' : ''}`} />
-            <DetailLayanan detailLayanan={detail} listMessages={listMessages} loadingDetail={loadingDetail}
-                setListMessages={setListMessages} isOpenDetail={isOpenDetail} />
+            <DetailLayanan detailLayanan={detail} setDetailLayanan={setDetail} listMessages={listMessages}
+                loadingDetail={loadingDetail} setListMessages={setListMessages} isOpenDetail={isOpenDetail} />
         </div>
     )
 }

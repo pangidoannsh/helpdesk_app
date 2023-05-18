@@ -36,7 +36,7 @@ export default function Login(props: LoginProps) {
         closeAlert();
         api.post('/auth/login', credential).then(res => {
             Cookies.set('jwt', res.data.access_token, { expires: 7 });
-            console.log(res.data);
+            // console.log(res.data);
 
             setUser(res.data.user_data);
             setIsOpen(false);
