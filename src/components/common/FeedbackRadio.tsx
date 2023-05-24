@@ -27,15 +27,27 @@ export default function FeedbackRadio(props: FeedbackRadioProps) {
     const [loadingSubmit, setLoadingSubmit] = useState(false)
 
     function handleSubmit(e: any) {
-        setLoadingSubmit(true)
         closeAlert()
         const dataPost = {
             value: selected.value,
             comment: commentRef?.current?.value ?? null,
             ticketId: ticketDetail.id
         }
+        // console.log(dataPost);
+        if (selected.value === 1 && commentRef?.current?.value === '') {
+            setAlert({
+                isActived: true,
+                code: 2,
+                title: 'Warning',
+                message: 'Tolong berikan Kritik,saran, dan alasan atas ke-Tidak Puasan anda!'
+            })
 
-        console.log(dataPost);
+            setTimeout(() => {
+                closeAlert()
+            }, 2000);
+            return;
+        }
+        setLoadingSubmit(true)
 
         AuthApi.post('/feedback', dataPost).then(res => {
             setAlert({

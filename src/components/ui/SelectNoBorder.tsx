@@ -11,8 +11,9 @@ interface SelectProps {
     useSelect: any;
     className?: string;
     onChange?: (value: any) => void;
+    widthNotFull?: boolean
 }
-const SelectNoBorder = ({ label, options = [], useSelect, className, onChange }: SelectProps) => {
+const SelectNoBorder = ({ label, options = [], useSelect, className, onChange, widthNotFull }: SelectProps) => {
 
     const [selected, setSelected] = useSelect;
 
@@ -23,7 +24,7 @@ const SelectNoBorder = ({ label, options = [], useSelect, className, onChange }:
         }
     }
     return (
-        <div className={`flex flex-col gap-2 w-full`}>
+        <div className={`flex flex-col gap-2 ${!widthNotFull ? 'w-full' : 'w-max'}`}>
             {label ? <label className={`text-sm text-slate-600`}>{label}</label> : ''}
             <Listbox value={selected} onChange={handleSelect}>
                 <div className="relative">

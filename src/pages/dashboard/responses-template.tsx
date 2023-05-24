@@ -119,13 +119,6 @@ export default function ResponsesTemplate(props: ResponsesProps) {
         setDataDelete(null);
         setopenModalDelete(false)
     }
-    // useEffect(() => {
-    //     AuthApi.get('/responses').then(res => {
-    //         setDataResponse(res.data.map((data: any) => displayData(data)));
-    //     }).catch(err => {
-    //         console.log(err.response);
-    //     }).finally(() => setLoadingTable(false))
-    // }, []);
 
     return (
         <DashboardLayout title='Responses Template | Helpdesk IT'>
@@ -155,7 +148,7 @@ export default function ResponsesTemplate(props: ResponsesProps) {
             {/* Modal Konfirmasi Delete */}
             <Modal isOpen={openModalDelete} setIsOpen={setopenModalDelete} size={300} className='p-4'>
                 <div className="flex flex-col gap-2">
-                    <div className='text-slate-800'>Hapus Respon "<span className='font-semibold'>{dataDelete?.text}</span>" ?</div>
+                    <div className='text-slate-800'>Hapus Respon <span className='font-semibold'>{dataDelete?.text}</span> ?</div>
                     <div className="flex gap-2 justify-end">
                         <button className='text-red-500 hover:text-red-700'
                             onClick={() => handleDelete()}>Hapus</button>

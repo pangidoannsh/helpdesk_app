@@ -93,7 +93,7 @@ export default function Login(props: LoginProps) {
                             leaveFrom="opacity-100 scale-100"
                             leaveTo="opacity-0 scale-95"
                         >
-                            <Dialog.Panel className="rounded flex flex-col gap-12
+                            <Dialog.Panel className="rounded-md flex flex-col gap-12
                                  bg-white p-6 text-left align-middle shadow-xl transition-all w-full sm:w-[450px]">
                                 {/* Title dari Modal */}
                                 <div className="flex justify-between items-start">

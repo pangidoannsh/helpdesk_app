@@ -116,13 +116,13 @@ export default function Search(props: SearchProps) {
             <form action="" className='flex flex-col gap-6 p-6 lg:p-9'>
                 <h5 className='text-xl text-primary-600'>PENCARIAN</h5>
                 {!props.withoutFungsi ? <>
-                    <div className="grid grid-cols-2 gap-6">
+                    <div className="grid md:grid-cols-2 gap-2 md:gap-6">
                         <Input inputRef={subjectRef} icon="ic:baseline-search" placeholder='Semua Subjek'
                             className={`${border} text-sm`} tagId='subject-input' defaultValue={router.query.subject ?? ""} />
                         <Select useSelect={[categoryInput, setCategoryInput]} icon="bxs:category" className={`${border}`}
                             options={categoryOptions} />
                     </div>
-                    <div className="grid grid-cols-3 gap-6">
+                    <div className="grid md:grid-cols-3 gap-2 md:gap-6">
                         <Select useSelect={[statusInput, setStatusInput]} icon="fluent:status-16-filled" className={`${border}`}
                             options={statusOptions} />
                         <Select useSelect={[priorityInput, setPriorityInput]} icon="material-symbols:priority" className={`${border}`}

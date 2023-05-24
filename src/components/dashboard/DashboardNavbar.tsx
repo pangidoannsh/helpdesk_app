@@ -64,16 +64,16 @@ export default function DashboardNavbar(props: DashboardNavbarProps) {
     }
 
     return (
-        <nav className='navbar-dashboard gap-2'>
+        <nav className='navbar-dashboard md:w-[110px] gap-2'>
             {menus.map((menu, index) => menu.level === user.level || !menu.level ?
                 (
                     <button onClick={() => handleClick(menu.pathname)}
-                        className={`flex flex-col py-4 px-6 gap-1 relative font-open-sans items-center border-r-2
+                        className={`flex flex-col py-4 px-4 md:px-6 gap-1 relative font-open-sans items-center border-r-2
                         ${(menu.pathname !== '/dashboard' && router.pathname.includes(menu.pathname)) ||
                                 menu.pathname === router.pathname ?
                                 'text-primary-600 border-primary-600' : 'text-slate-400 border-fafafa'}`} key={index}>
                         <Icon icon={menu.icon} className="text-2xl" />
-                        <span className={`text-sm uppercase 
+                        <span className={`hidden md:inline text-xs lg:text-sm uppercase 
                             ${(!router.pathname.includes(menu.pathname) && menu.pathname !== '/dashboard') ||
                                 menu.pathname !== router.pathname ? 'text-fafafa' : ''}`}>
                             {menu.title}

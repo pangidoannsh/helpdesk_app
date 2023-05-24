@@ -78,12 +78,10 @@ input:placeholder-shown~.floating-label {
     animation-name: drop-profile-navbar;
     animation-duration: .3s;
     bottom: 0;
-    left: 0;
     transform: translate(0, 100%);
     background-color: white;
     padding: 1rem;
     border-radius: 4px;
-
 }
 
 .chat-entry {
@@ -134,7 +132,6 @@ input:placeholder-shown~.floating-label {
 .navbar-dashboard {
     position: fixed;
     justify-content: center;
-    width: 110px;
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -162,6 +159,14 @@ input:placeholder-shown~.floating-label {
     cursor: pointer;
 }
 
+.step-icon .step-detail {
+    opacity: 0;
+    transition: .2s;
+}
+
+.step-icon:hover .step-detail {
+    opacity: .8;
+}
 
 .table-row:hover .exp-ticket {
     display: block;

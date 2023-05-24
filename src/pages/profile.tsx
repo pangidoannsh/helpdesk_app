@@ -4,6 +4,7 @@ import Card from '@/components/ui/Card';
 import Input from '@/components/ui/Input';
 import Select from '@/components/ui/Select';
 import { api } from '@/config/api';
+import { AlertContext } from '@/context/AlertProvider';
 import { UserContext } from '@/context/UserProvider'
 import AuthApi from '@/services/authApi';
 import { GetServerSidePropsContext, GetStaticPropsContext } from 'next';
@@ -23,17 +24,13 @@ interface ProfileProps {
 }
 export default function ProfilePage(props: ProfileProps) {
     const { user, setUser } = useContext(UserContext)
+    const { setAlert, closeAlert } = useContext(AlertContext)
     const nameRef = useRef<HTMLInputElement>(null)
     const phoneNumRef = useRef<HTMLInputElement>(null)
     const [fungsiOptions, setFungsiOptions] = useState(props.fungsiOptions.map((data: any) => ({ value: data.id, display: data.name?.toUpperCase() })));
-    const [selectedFungsi, setSelectedFungsi] = useState(() => {
-        if (user.fungsi) {
-            return { value: user.fungsi.id, display: user.fungsi.name?.toUpperCase() }
-        }
-        return defaultFungsi
-    });
+    const [selectedFungsi, setSelectedFungsi] = useState(defaultFungsi);
 
-    const [selectedLevel, setSelectedLevel] = useState({ value: user.level, display: user.level?.toUpperCase() })
+    const [selectedLevel, setSelectedLevel] = useState<{ value: any, display: string }>({ value: null, display: "Pilih Level" })
     function handleSubmit(e: any) {
         const dataPost = {
             phone: phoneNumRef.current?.value,
@@ -46,12 +43,31 @@ export default function ProfilePage(props: ProfileProps) {
             const { fungsi, level, name } = res.data
 
             setUser({ ...user, fungsi, level, name })
-            alert('Berhasil Update Profile')
+            setAlert({
+                isActived: true,
+                code: 1,
+                title: 'Success',
+                message: 'Profile Berhasil Diubah'
+            })
         }).catch(err => {
-            console.log(err.respnse);
-            alert('error')
+            console.log(err);
+            setAlert({
+                isActived: true,
+                code: 0,
+                title: 'Error ' + err.response?.status,
+                message: err.response?.data.message.join(', ') ?? 'Gagal Update Data'
+            })
         })
     }
+
+    useEffect(() => {
+        if (user.fungsi) {
+            setSelectedFungsi({ value: user.fungsi.id, display: user.fungsi.name?.toUpperCase() })
+        }
+        if (user.level) {
+            setSelectedLevel({ value: user.level, display: user.level?.toUpperCase() })
+        }
+    }, [user])
     return (
         <CommonLayout title='Profile | Helpdesk IT'>
             <Card className='absolute flex flex-col gap-6 p-9 left-1/2 -translate-x-1/2 top-32 w-1/2'>
@@ -94,7 +110,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     }).catch(err => {
         console.log(err.response);
     })
-    console.log(fungsiOptions);
     return {
         props: {
             fungsiOptions, currentPhone

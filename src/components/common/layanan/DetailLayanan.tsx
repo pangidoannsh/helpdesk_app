@@ -27,6 +27,7 @@ interface DetailLayananProps {
 export default function DetailLayanan({ detailLayanan, listMessages = [],
     loadingDetail, setListMessages = () => { }, isOpenDetail, setDetailLayanan }: DetailLayananProps) {
     const { slug } = useRouter().query;
+    const router = useRouter();
 
     const [isGeneral, setisGeneral] = useState(true);
     const [loadingSend, setloadingSend] = useState(false);
@@ -80,6 +81,10 @@ export default function DetailLayanan({ detailLayanan, listMessages = [],
                     !loadingDetail ? (
                         <>
                             <div className="flex flex-col gap-6">
+                                <button className='block lg:hidden text-2xl text-slate-500'
+                                    onClick={() => router.push('/ticket')}>
+                                    <Icon icon="ph:arrow-left-bold" />
+                                </button>
                                 {/* Tab */}
                                 <div className="divider-bottom">
                                     <button className={`rounded-t-lg border-t border-x uppercase text-sm  p-2 translate-y-[1px]

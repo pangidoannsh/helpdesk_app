@@ -8,6 +8,7 @@ import { api } from "@/config/api";
 import AuthApi from "@/services/authApi";
 import { Icon } from "@iconify/react";
 import { eachYearOfInterval } from "date-fns";
+import { GetServerSidePropsContext, GetStaticPropsContext } from "next";
 import { useRouter } from "next/router";
 import { parseCookies } from "nookies";
 import { useEffect, useState } from "react";
@@ -70,19 +71,10 @@ export default function Dashboard(props: DashboardProps) {
     function handleClickStatus(status: string) {
         router.push('dashboard/ticket?status=' + status)
     }
-    // useEffect(() => {
-    //     getMonthlyTicketCount();
-    //     AuthApi.get('/ticket/count/status').then(res => {
-    //         setTicketCountEachStatus(res.data)
-    //     }).catch(err => {
-    //         console.log(err);
-    //     })
-    // }, [])
-
 
     return (
         <DashboardLayout title="Dashboard | Helpdesk IT" content="dashboard helpdesk it">
-            <div className="grid grid-cols-3 lg:grid-cols-5 gap-6">
+            <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-6">
                 {status.map((data, index) => (
                     <Card className="xl:p-9 p-6 rounded flex justify-between border hover:border-primary-500" key={index}
                         onClick={() => handleClickStatus(data.status)}>
@@ -94,7 +86,8 @@ export default function Dashboard(props: DashboardProps) {
                         </div>
                         <Icon icon={data.icon} className={`text-5xl ${data.status === 'open' ? 'text-green-600' :
                             data.status === 'process' ? 'text-secondary' : data.status === 'done' ? 'text-primary-600' :
-                                'text-slate-400'}`} />
+                                data.status === 'expired' ? 'text-red-600' :
+                                    'text-slate-400'}`} />
                     </Card>
                 ))}
             </div>
@@ -102,7 +95,7 @@ export default function Dashboard(props: DashboardProps) {
                 <div className="lg:col-span-2 col-span-3 flex flex-col gap-6 lg:order-1 order-2">
                     <Card className="flex flex-col p-9 rounded gap-6">
                         <div className="flex gap-6 items-center">
-                            <h3 className='text-xl font-medium text-primary-700 uppercase'>tiket bulanan</h3>
+                            <h3 className='md:text-xl text-lg font-medium text-primary-700 uppercase'>tiket bulanan</h3>
                             <div>
                                 <SelectNoBorder useSelect={[selectedYearMonthlyTicket, setSelectedYearMonthlyTicket]}
                                     className='pr-6' options={yearOptions} onChange={handleChangeSleectedMonthlyTicket} />
@@ -111,22 +104,22 @@ export default function Dashboard(props: DashboardProps) {
                         <span className="text-xs text-slate-400 relative top-4 -mt-6">Tiket</span>
                         <LineChart data={dataMonthlyTicket} labels={monthLabels} labelHover="tiket masuk" />
                     </Card>
-                    <Card className="flex flex-col p-9 rounded gap-6">
-                        <h3 className='text-xl font-medium text-primary-700 uppercase'>rata-rata penyelesaian tiket</h3>
+                    <Card className="flex flex-col xl:p-9 p-6 rounded gap-6">
+                        <h3 className='md:text-xl text-lg font-medium text-primary-700 uppercase'>rata-rata penyelesaian tiket</h3>
                         <span className="text-xs text-slate-400 relative top-4 -mt-6">Jam</span>
                         <BarChart data={props.agents.map(agent => ticketComplete.find((ticket: any) => ticket.agentId === agent.id)?.timeRate ?? 0)}
                             labels={props.agents.map(agent => agent.name)} labelHover="rata-rata penyelesaian (jam)" />
                     </Card>
                 </div>
                 <div className="flex flex-col col-span-3 lg:col-span-1 gap-6 order-1 lg:order-2">
-                    <Card className="flex flex-col p-9 rounded gap-6">
-                        <h3 className='text-xl font-medium text-primary-700 uppercase'>feedback</h3>
+                    <Card className="flex flex-col xl:p-9 p-6 rounded gap-6">
+                        <h3 className='md:text-xl text-lg font-medium text-primary-700 uppercase'>feedback</h3>
                         <div className="flex flex-col gap-6 items-center">
-                            <DoughnutChart labels={feedbackRate} labelHover="total" />
+                            <DoughnutChart labels={feedbackRate} labelHover="persentase (%)" />
                         </div>
                     </Card>
-                    <Card className="flex flex-col p-9 rounded gap-2 relative overflow-hidden">
-                        <h3 className='text-xl font-medium text-primary-700 uppercase'>Agen</h3>
+                    <Card className="flex flex-col xl:p-9 p-6 rounded gap-2 relative overflow-hidden">
+                        <h3 className='md:text-xl text-lg font-medium text-primary-700 uppercase'>Agen</h3>
                         <div className="flex flex-col gap-2">
                             <div className="text-sm text-slate-400">Jumlah Agen :</div>
                             <div className="text-6xl text-primary-700">{props.agents.length}</div>
@@ -140,7 +133,7 @@ export default function Dashboard(props: DashboardProps) {
     )
 }
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
     const token = parseCookies(context).jwt;
     if (!token) {
         return {

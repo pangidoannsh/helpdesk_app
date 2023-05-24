@@ -172,21 +172,6 @@ export default function Ticket(props: TicketPageProps) {
         setcurrentPage(prev => newTotalPage < prev ? newTotalPage : prev)
     }, [totalData])
 
-    // useEffect(() => {
-    //     const { status, subject, category, priority, fungsi } = router.query;
-    //     if (status || subject || category || priority || fungsi) {
-    //         let query: string = "";
-    //         if (subject) query += `subject=${subject}&`;
-    //         if (category) query += `category=${category}&`;
-    //         if (status) query += `status=${status}&`;
-    //         if (priority) query += `priority=${priority}&`;
-    //         if (fungsi) query += `fungsi=${fungsi}&`;
-    //         setFilterQuery(query)
-    //     } else {
-    //         console.log('query not exist');
-    //     }
-    // }, [])
-
     return (
         <DashboardLayout title='Tiket | Helpdesk Dashboard'>
             <Search border='rounded' functionSearch={handleSearch} />

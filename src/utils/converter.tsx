@@ -12,7 +12,11 @@ export default class Converter {
     static dateToMMformat(date: string) {
         return format(parseISO(date), 'dd/MM/yyyy HH:m');
     }
-    static dateToMMMMformat(date: string) {
+    static dateToMMMMformat(date: string, reverse?: boolean) {
+        if (reverse) {
+            return format(parseISO(date), 'dd MM yyyy HH:m');
+        }
         return format(parseISO(date), 'HH:m dd MM yyyy');
     }
+
 }

@@ -10,13 +10,16 @@ import { useEffect, useRef, useState } from 'react'
 import { io } from 'socket.io-client';
 
 const socket = io(BASE_URL);
-
+interface TicketDetail {
+    id: any,
+    status: string
+}
 export default function TicketDetail() {
     const router = useRouter();
     const { id } = router.query;
     const messageRef = useRef<HTMLTextAreaElement>(null)
     const [loadingPage, setloadingPage] = useState(true);
-    const [detail, setdetail] = useState<any>();
+    const [detail, setdetail] = useState<TicketDetail>();
     const [dataMessages, setDataMessages] = useState<any>([]);
     const [isGeneral, setisGeneral] = useState(true);
     const [responseOptions, setResponseOptions] = useState<any>([]);
@@ -47,7 +50,7 @@ export default function TicketDetail() {
     useEffect(() => {
         socket.on("receiveMessage", data => {
             if (setDataMessages) {
-                console.log(data);
+                // console.log(data);
                 // console.log(id);
 
                 if (data.ticket.id === id) {

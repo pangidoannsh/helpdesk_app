@@ -24,7 +24,7 @@ const displayEmployee = (data: any) => {
             <span>{data.name}</span>
             <span className="uppercase">{data.fungsi?.name ?? 'undifined'}</span>
         </div>,
-        fungsiId: data.fungsi.id
+        fungsiId: data.fungsi?.id ?? null
     }
 }
 export default function CreateTicket(props: CreateTicketProps) {
@@ -48,11 +48,22 @@ export default function CreateTicket(props: CreateTicketProps) {
         setinputAttachment(e.target.files[0])
     }
     function handleCreate(e: any) {
-        setloadingCreate(true);
         closeAlert();
         const pegawaiFungsiId = employeeOtpions.find(employee => employee.value == inputEmployee.value)?.fungsiId ?? null
-        console.log(pegawaiFungsiId);
+        if (!pegawaiFungsiId && user.level !== 'pegawai') {
+            setAlert({
+                isActived: true,
+                code: 0,
+                title: `Error 406`,
+                message: "Pegawai belum memiliki Fungsi!"
+            })
 
+            setTimeout(() => {
+                closeAlert()
+            }, 2000)
+            return;
+        }
+        setloadingCreate(true);
         const dataPost = {
             fungsiId: user.level === 'pegawai' ? user.fungsi?.id ?? -1
                 : pegawaiFungsiId,

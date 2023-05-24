@@ -21,7 +21,7 @@ export default function Profile() {
         })
         setTimeout(() => {
             closeAlert();
-        }, 3000);
+        }, 2000);
         if (router.pathname !== "/") router.push("/");
     }
     return (
@@ -31,7 +31,7 @@ export default function Profile() {
                 <span className='uppercase lg:inline hidden'>Hello, {user.name?.split(" ")[0]}!</span>
             </button>
             {drop ?
-                <div className="profile-drop shadow text-sm">
+                <div className="profile-drop md:left-0 -left-full -ml-6 md:ml:0 shadow text-sm">
                     <Link href="/profile" className='text-slate-500 mb-4 flex items-center gap-1 hover:text-primary-600'>
                         <Icon icon="fa6-solid:user-gear" className='text-lg' />
                         <span>PROFILE</span>

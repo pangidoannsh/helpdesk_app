@@ -13,13 +13,15 @@ export default function Profile() {
         <>
             <div className='flex gap-4 items-center'>
                 <div style={{ backgroundImage: `url('${profileImage}')` }}
-                    className="bg-no-repeat bg-center rounded w-12 h-14 bg-cover" />
+                    className="bg-no-repeat bg-center rounded w-12 h-14 bg-cover hidden md:block" />
                 <Menu as="div" className="relative inline-block text-left">
                     <Menu.Button className="flex items-center">
-                        <span className='text-slate-800'>{user.name}</span>
-                        <Icon icon="material-symbols:arrow-drop-down" className='text-xl' />
+                        <div style={{ backgroundImage: `url('${profileImage}')` }}
+                            className="bg-no-repeat bg-center rounded w-12 h-14 bg-cover md:hidden" />
+                        <span className='text-slate-800 hidden md:block'>{user.name}</span>
+                        <Icon icon="material-symbols:arrow-drop-down hidden md:block" className='text-xl' />
                     </Menu.Button>
-                    <div className='text-xs text-slate-500 capitalize'>{user.level}</div>
+                    <div className='text-xs text-slate-500 capitalize hidden md:block'>{user.level}</div>
                     <Transition
                         as={Fragment}
                         enter="transition ease-out duration-100"

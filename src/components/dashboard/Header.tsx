@@ -6,7 +6,7 @@ export default function Header() {
             {/* Logo */}
             <div className="flex gap-2">
                 <img src="/bps.svg" />
-                <div className="font-open-sans">
+                <div className="font-open-sans hidden md:block">
                     <div className="font-semibold text-2xl text-gray-800 uppercase">Helpdesk</div>
                     <div className="text-gray-700">BPS RIau</div>
                 </div>

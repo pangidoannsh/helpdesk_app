@@ -5,12 +5,17 @@ import SelectNoBorder from "@/components/ui/SelectNoBorder";
 import BASE_URL from "@/config/baseUrl";
 import { UserContext } from "@/context/UserProvider";
 import AuthApi from "@/services/authApi";
-import { RefObject, useContext, useState } from "react";
-import { io } from "socket.io-client";
+import { RefObject, useContext, useEffect, useState } from "react";
 import { AlertContext } from "@/context/AlertProvider";
+import Converter from "@/utils/converter";
+import Stepper from "./StatusStepper";
 
+const statusSteps = [
+    { status: 'open', icon: 'material-symbols:mail', title: 'OPEN' },
+    { status: 'process', icon: 'uil:process', title: 'PROSES,' },
+    { status: 'feedback', icon: 'fluent:person-feedback-48-filled', title: 'FEEDBACK' },
+]
 const nullResponse = { value: null, display: "Balas Pesan Dengan Cepat" };
-const socket = io(BASE_URL);
 
 interface DetailHeaderProps {
     isGeneral: boolean;
@@ -21,6 +26,7 @@ interface DetailHeaderProps {
     setDataMessage: (dataMessage: any) => void;
     responsesOptions?: Array<any>;
 }
+
 export default function DetailHeader(props: DetailHeaderProps) {
     const { user } = useContext(UserContext)
     const { setAlert, closeAlert } = useContext(AlertContext);
@@ -28,6 +34,8 @@ export default function DetailHeader(props: DetailHeaderProps) {
     const [fastReply, setFastReply] = useState(nullResponse);
     const [loadingSend, setloadingSend] = useState(false);
     const [loadingProcess, setloadingProcess] = useState(false);
+    const [agentOptions, setAgentOptions] = useState([]);
+    const [agentSelected, setAgentSelected] = useState({ value: null, display: 'Belum Ada Agen Bertugas' });
 
     function handleChangeResponse(value: any) {
         if (messageRef) {
@@ -50,7 +58,7 @@ export default function DetailHeader(props: DetailHeaderProps) {
                 // setDataMessage((prev: any) => [...prev, res.data]);
                 messageRef.current ? messageRef.current.value = "" : '';
                 setFastReply(nullResponse);
-                if (detail.status === 'open') {
+                if (detail.status === 'open' && user.level === 'agent') {
                     handleProcess();
                 }
             }).catch(err => {
@@ -82,7 +90,12 @@ export default function DetailHeader(props: DetailHeaderProps) {
                 title: "Updated",
                 message: `Status Ticket Berubah ke ${status.toUpperCase()}!`
             })
-            setDetail((prev: any) => ({ ...prev, status }))
+            AuthApi.get(`/ticket/detail/${detail.id}`).then(res => {
+                setDetail(res.data)
+            }).catch(err => {
+                console.log(err.response);
+            })
+            // setDetail((prev: any) => ({ ...prev, status }))
         }).catch(err => {
             console.log(err.response);
             setAlert({
@@ -98,6 +111,36 @@ export default function DetailHeader(props: DetailHeaderProps) {
             }, 2000);
         });
     }
+    function handleAddAgent() {
+        AuthApi.post(`/ticket-assignment/${detail.id}`, {
+            agentId: agentSelected.value
+        }).then(res => {
+            // console.log(res.data);
+            setDetail({ ...detail, assignment: [res.data] });
+            setAlert({
+                isActived: true,
+                code: 1,
+                title: "Updated",
+                message: `Agen Berhasil ditambahkan ke Tugas`
+            })
+        }).catch(err => {
+            console.log(err.response ?? err);
+
+            setAlert({
+                isActived: true,
+                code: 0,
+                title: "Failed",
+                message: `Gagal Menambahkan Agen ke Tugas!`
+            })
+        })
+    }
+    useEffect(() => {
+        if (user && user.level === 'supervisor') {
+            AuthApi.get('/user/agent').then(res => {
+                setAgentOptions(res.data.map((agent: any) => ({ value: agent.id, display: agent.name?.toUpperCase() ?? 'No Name' })))
+            }).catch(err => console.log(err))
+        }
+    }, [])
 
     return (
         <Card className='flex flex-col gap-8 p-9 rounded'>
@@ -137,7 +180,28 @@ export default function DetailHeader(props: DetailHeaderProps) {
                     </div>
                 </div>
                 <div className="text-slate-600">{detail?.category?.categoryName ?? ''}</div>
+                <div className="flex gap-2 text-sm text-slate-500 items-center">
+                    <div className="font-medium min-w-max">AGEN BERTUGAS :</div>
+                    {user.level === 'supervisor' && detail?.assignment.length === 0 ? (
+                        <div className="flex gap-6">
+                            <SelectNoBorder useSelect={[agentSelected, setAgentSelected]} options={agentOptions}
+                                widthNotFull={true} />
+                            {agentSelected.value ? <button className="text-primary-600 font-medium hover:text-primary-700"
+                                onClick={handleAddAgent}>
+                                Simpan
+                            </button> : ''}
+                        </div>
+                    ) : (
+                        <div>
+                            {detail.assignment ?
+                                detail?.assignment.length !== 0 ? detail?.assignment.map((agent: any) => agent.user.name).join(', ') :
+                                    '(Belum Ada Agen Ditugaskan)' : ''
+                            }
+                        </div>
+                    )}
+                </div>
             </div>
+
             {isGeneral ? (
                 <>
                     <div className='flex gap-12'>
@@ -151,22 +215,32 @@ export default function DetailHeader(props: DetailHeaderProps) {
                         </div>
                         <div className="text-sm">
                             <div className='text-slate-500'>Waktu Dibuat</div>
-                            <div className='text-slate-800'>{detail?.createdAt ?? ''}</div>
+                            <div className='text-slate-800'>{detail ? Converter.dateToMMMMformat(detail.createdAt, true) : '-'}</div>
                         </div>
                         <div className="text-sm">
                             <div className='text-slate-500'>Masa Aktif</div>
                             <div className='text-slate-800'>
-                                {detail?.expiredAt !== " " ? detail?.expiredAt ?? 'Tidak Tenggat Waktu' : 'Tidak Ada Tenggat Waktu'}
+                                {detail ? Converter.dateToMMMMformat(detail.expiredAt, true) : 'Tidak Ada Tenggat Waktu'}
                             </div>
                         </div>
                     </div>
+
                     {detail.status === 'open' || detail.status === 'process' ? <div>
                         <Button className="rounded text-white items-center py-2 px-8 uppercase"
-                            onClick={handleProcess} loading={loadingProcess}>
+                            onClick={handleProcess} loading={loadingProcess} disabled={user.level !== 'agent'}>
                             {detail.status === 'process' ? 'Selesaikan Tiket' : 'Proses Ticket'}
                         </Button>
                     </div> : ''}
-                    {/* <div className="divider-bottom" /> */}
+                    <div className="flex flex-col gap-4">
+                        <h4 className="font-medium text-lg text-slate-600 uppercase">Riwayat Tiket</h4>
+                        <Stepper labels={statusSteps.map((step: any) => {
+                            const { status } = step;
+                            const getHistory = detail?.history?.find((history: any) => history.status === status) ?? null;
+                            return {
+                                ...step, agentName: getHistory?.userCreated.name ?? null
+                            }
+                        })} />
+                    </div>
                 </>
             ) :
                 (<>
