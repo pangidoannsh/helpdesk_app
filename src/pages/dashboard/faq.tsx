@@ -19,7 +19,7 @@ const columnTable = [
 interface FaqProps {
     dataFaq: Array<any>
 }
-export default function faq(props: FaqProps) {
+export default function Faq(props: FaqProps) {
     const { setAlert, closeAlert } = useContext(AlertContext)
     console.log(props.dataFaq);
 
