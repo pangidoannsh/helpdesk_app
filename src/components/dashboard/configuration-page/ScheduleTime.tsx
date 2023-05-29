@@ -109,9 +109,6 @@ export default function ScheduleTime(props: ScheduleTimeProps) {
             agentId: agentSelected.value,
             dutyTime: new Date(selectedDay.getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 19).replace('T', ' ')
         };
-
-
-        console.log(selectedDay);
         AuthApi.post('/time-schedule', dataPost).then(res => {
             setDataSchedule((prev: any) => [...prev, displayData(res.data)]);
             setAlert({
