@@ -1,5 +1,4 @@
 import { parseISO, format } from "date-fns";
-import { id } from "date-fns/locale";
 
 export default class Converter {
     static setToRowText(data: string, indikator?: string) {

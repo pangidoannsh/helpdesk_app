@@ -230,7 +230,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     })
 
     // secara default hanya akan mengambil data dengan status open
-    await api.get("/ticket/length", {
+    await api.get("/ticket/length?" + query, {
         headers: { Authorization: `Bearer ${token}` }
     }).then(res => {
         totalData = res.data

@@ -9,6 +9,9 @@ import { RefObject, useContext, useEffect, useState } from "react";
 import { AlertContext } from "@/context/AlertProvider";
 import Converter from "@/utils/converter";
 import Stepper from "./StatusStepper";
+import checkExtension from "@/utils/checkExtension";
+import Link from "next/link";
+import { Icon } from "@iconify/react";
 
 const statusSteps = [
     { status: 'open', icon: 'material-symbols:mail', title: 'OPEN' },
@@ -36,6 +39,7 @@ export default function DetailHeader(props: DetailHeaderProps) {
     const [loadingProcess, setloadingProcess] = useState(false);
     const [agentOptions, setAgentOptions] = useState([]);
     const [agentSelected, setAgentSelected] = useState({ value: null, display: 'Belum Ada Agen Bertugas' });
+    const [openFile, setOpenFile] = useState(false);
 
     function handleChangeResponse(value: any) {
         if (messageRef) {
@@ -132,7 +136,7 @@ export default function DetailHeader(props: DetailHeaderProps) {
                 title: "Failed",
                 message: `Gagal Menambahkan Agen ke Tugas!`
             })
-        })
+        }).finally(() => setTimeout(closeAlert, 2000))
     }
     useEffect(() => {
         if (user && user.level === 'supervisor') {
@@ -204,7 +208,7 @@ export default function DetailHeader(props: DetailHeaderProps) {
 
             {isGeneral ? (
                 <>
-                    <div className='flex gap-12'>
+                    <div className='flex flex-wrap gap-12'>
                         <div className="text-sm">
                             <div className='text-slate-500'>Fungsi</div>
                             <div className='text-slate-800 uppercase'>{detail?.fungsi?.name ?? 'undifined'}</div>
@@ -240,6 +244,39 @@ export default function DetailHeader(props: DetailHeaderProps) {
                                 ...step, agentName: getHistory?.userCreated.name ?? null
                             }
                         })} />
+                        {detail.fileAttachment ?
+                            <div className="mt-2">
+                                <div className="flex gap-2 items-center mb-2">
+                                    <h4 className="font-medium text-lg text-slate-600 uppercase">File Lampiran</h4>
+                                    <button onClick={() => setOpenFile(prev => !prev)}>
+                                        <Icon icon="material-symbols:arrow-drop-down" className={`text-2xl text-slate-600
+                                        ${openFile ? 'rotate-180' : 'rotate-0'} duration-200`} />
+                                    </button>
+                                </div>
+                                {checkExtension(detail.fileAttachment, ['.jpg', '.png', '.jpeg', '.webp']) ?
+                                    <div className={`${openFile ? 'h-auto' : 'h-0'} overflow-hidden duration-300`}>
+                                        <div className="relative w-max rounded overflow-hidden">
+                                            <img src={`${BASE_URL}/file/${detail.fileAttachment}`} className="max-w-[50vw]  
+                                        lg:max-h-52" />
+                                            <Link href={`${BASE_URL}/file/${detail.fileAttachment}`} target="_blank"
+                                                className="absolute top-0 left-0 w-full h-full hover:opacity-100 bg-primary-700/30
+                                            opacity-0 duration-200 cursor-pointer text-white flex justify-center items-center
+                                            font-medium text-2xl">
+                                                Lihat
+                                            </Link>
+                                        </div>
+                                    </div> : detail.fileAttachment.includes(".pdf") ? (
+                                        <div className={`flex flex-col gap-2 rounded- overflow-hidden
+                                        ${openFile ? 'h-72' : 'h-0'} overflow-hidden duration-300`}>
+                                            <Link href={`${BASE_URL}/file/${detail.fileAttachment}`} target="_blank"
+                                                className="hover:text-primary-700 text-slate-500 font-semibold">
+                                                Klik Untuk Melihat Ukuran Penuh
+                                            </Link>
+                                            <iframe src={`${BASE_URL}/file/${detail.fileAttachment}`} className="w-1/2 h-60" />
+                                        </div>
+                                    ) : ''}
+                            </div> : ''
+                        }
                     </div>
                 </>
             ) :

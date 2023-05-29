@@ -74,10 +74,9 @@ export default function CreateTicket(props: CreateTicketProps) {
             file: inputAttachment,
             userOrdererId: user.level !== 'pegawai' ? inputEmployee.value : null
         }
-        console.log(dataPost);
 
         // console.log(dataPost);
-        AuthApi.post('/ticket', dataPost).then(res => {
+        AuthApi.postFile('/ticket', dataPost).then(res => {
             if (setListData) {
                 setListData((prev: any) => [...prev, res.data]);
             }
@@ -103,7 +102,7 @@ export default function CreateTicket(props: CreateTicketProps) {
                         isActived: true,
                         code: 0,
                         title: `Error ${err.response.status}`,
-                        message: "Layanan Gagal diajukan!"
+                        message: err.response.data.message ?? "Layanan Gagal diajukan!"
                     })
                 }
             }
@@ -143,7 +142,8 @@ export default function CreateTicket(props: CreateTicketProps) {
             </div>
             <Input className="rounded-lg" label="SUBJEK" tagId="subjek-id" inputRef={inputSubjectRef} />
             <TextArea inputRef={inputDescRef} label="KETERANGAN" tagId="keterangan-id" />
-            <FileInput tagId="lampiran-id" label="LAMPIRAN (optional)" handleOnChange={handleAttachment} />
+            <FileInput tagId="lampiran-id" label="LAMPIRAN (optional)" handleOnChange={handleAttachment}
+                inputState={inputAttachment} />
             <Button loading={loadingCreate} onClick={handleCreate}
                 className="common-button py-2">KIRIM</Button>
         </div>

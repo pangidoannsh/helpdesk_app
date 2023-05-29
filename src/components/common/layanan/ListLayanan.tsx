@@ -26,9 +26,8 @@ export default function ListLayanan({ datas, handleNextPage, refSection, classNa
     }
 
     return (
-        <div className={`w-full lg:w-[35%] flex flex-col gap-4 ${className} max-h-[640px] overflow-hidden hover:overflow-y-auto
-        light-scrollbar`} onScroll={() => handleScroll()}
-            ref={container}>
+        <div className={`w-full lg:w-[35%] flex flex-col gap-4 ${className} max-h-[640px] overflow-y-auto
+        light-scrollbar`} onScroll={() => handleScroll()} ref={container}>
             {datas.length !== 0 ?
                 datas.map((data, index) => (
                     <button

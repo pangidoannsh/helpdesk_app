@@ -13,10 +13,20 @@ export default class AuthApi {
     static post(url: string, payload: any) {
         return api.post(url, payload, {
             headers: {
-                Authorization: `Bearer ${Cookies.get('jwt')}`
+                Authorization: `Bearer ${Cookies.get('jwt')}`,
             }
         })
     }
+    static postFile(url: string, payload: any) {
+        return api.post(url, payload, {
+            headers: {
+                Authorization: `Bearer ${Cookies.get('jwt')}`,
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+    }
+
+
 
     static put(url: string, payload?: any) {
         return api.put(url, payload, {

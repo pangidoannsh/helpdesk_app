@@ -86,7 +86,6 @@ export default function Layanan(props: LayananProps) {
 
     useEffect(() => {
         if (detailLayanan) {
-            console.log('mount');
             setListLayanan(listLayanan.map((ticket: any) => ticket.id === detailLayanan.id ? detailLayanan : ticket))
         }
     }, [detailLayanan])
