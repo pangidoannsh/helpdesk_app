@@ -1,4 +1,5 @@
 import { Icon } from '@iconify/react'
+import Image from 'next/image';
 import React, { RefObject } from 'react'
 
 interface FileInputProps {
@@ -15,7 +16,7 @@ export default function FileInput({ tagId, label, handleOnChange, inputState }: 
             rounded border-slate-300 p-4 items-center cursor-pointer relative`}>
                 {inputState ? inputState.type.includes('image') ?
                     <>
-                        <img src={URL.createObjectURL(inputState)} style={{ maxWidth: '100%', maxHeight: '300px' }} />
+                        <Image alt='file input' src={URL.createObjectURL(inputState)} style={{ maxWidth: '100%', maxHeight: '300px' }} />
                         <div className={`absolute w-full h-full peer ${inputState ? ' hover:bg-primary-700/30' : ''}`}></div>
                         <span className='font-medium text-2xl absolute text-white peer-hover:block hidden'>Ganti {label}</span>
                     </> :

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useContext, useState } from 'react'
 import Profile from './Profile';
+import Image from 'next/image';
 
 interface CommonNavbarProps {
     setOpenLoginModal: (isOpenLoginModal: boolean) => void;
@@ -38,7 +39,7 @@ export default function CommonNavbar({ setOpenLoginModal, setLoadingPage }: Comm
                     faq
                 </button>}
             <Link href="/" className="flex gap-4 items-center">
-                <img src="/bps.svg" alt="bps logo" className='w-10 md:w-auto' />
+                <Image src="/bps.svg" alt="bps logo" className='w-10 md:w-auto' />
                 <span className='font-open-sans hidden md:block text-2xl text-primary-600'>HELPDESK BPS Riau</span>
             </Link>
             {/* Mobile */}

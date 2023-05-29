@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Fragment, useContext, useRef, useState } from 'react';
 import Button from '../ui/Button';
+import Image from 'next/image';
 
 interface LoginProps {
     isOpen: boolean;
@@ -150,7 +151,7 @@ export default function Login(props: LoginProps) {
 const LoginLogo = () => {
     return (
         <div className="flex gap-2">
-            <img src="/bps.svg" alt="bps logo" />
+            <Image src="/bps.svg" alt="bps logo" />
             <div className='text-slate-800 font-open-sans'>
                 <div className="font-semibold text-2xl">
                     HELPDESK
