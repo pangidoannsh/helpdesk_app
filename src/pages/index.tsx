@@ -5,7 +5,7 @@ import { Icon } from '@iconify/react';
 import { useEffect, useState } from "react";
 import Footer from "@/components/common/Footer";
 import Link from "next/link";
-
+import Image from "next/image"
 
 export default function Home() {
   const [isOpenCreateTiket, setIsOpenCreateTiket] = useState(false);
@@ -46,7 +46,7 @@ export default function Home() {
           </div>
         </div>
         <div className="absolute right-12 top-16 -z-10">
-          <img src="/assets/images/cs_image.png" alt="helpdesk illustration" className="hidden lg:block lg:w-[65vw] opacity-60 xl:opacity-100" />
+          <Image src="/assets/images/cs_image.png" alt="helpdesk illustration" className="hidden lg:block lg:w-[65vw] opacity-60 xl:opacity-100" />
         </div>
       </div>
       <Footer />

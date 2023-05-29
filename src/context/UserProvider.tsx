@@ -22,18 +22,12 @@ export const UserContext = React.createContext<UserContextProps>({
 export default function UserProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User>({});
 
-  let hasMount = false;
   useEffect(() => {
-    if (!hasMount) {
-      AuthApi.get("/auth/profile").then((res: any) => {
-        setUser(res.data);
-      }).catch((err: any) => {
-        console.log(err);
-      })
-    }
-    return () => {
-      hasMount = true;
-    }
+    AuthApi.get("/auth/profile").then((res: any) => {
+      setUser(res.data);
+    }).catch((err: any) => {
+      console.log(err);
+    })
   }, [])
 
   return (

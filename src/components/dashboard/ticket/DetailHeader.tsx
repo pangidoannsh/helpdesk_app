@@ -12,6 +12,7 @@ import Stepper from "./StatusStepper";
 import checkExtension from "@/utils/checkExtension";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
+import Image from "next/image";
 
 const statusSteps = [
     { status: 'open', icon: 'material-symbols:mail', title: 'OPEN' },
@@ -256,7 +257,8 @@ export default function DetailHeader(props: DetailHeaderProps) {
                                 {checkExtension(detail.fileAttachment, ['.jpg', '.png', '.jpeg', '.webp']) ?
                                     <div className={`${openFile ? 'h-auto' : 'h-0'} overflow-hidden duration-300`}>
                                         <div className="relative w-max rounded overflow-hidden">
-                                            <img src={`${BASE_URL}/file/${detail.fileAttachment}`} className="max-w-[50vw]  
+                                            <Image alt="file_lampiran" src={`${BASE_URL}/file/${detail.fileAttachment}`}
+                                                className="max-w-[50vw]  
                                         lg:max-h-52" />
                                             <Link href={`${BASE_URL}/file/${detail.fileAttachment}`} target="_blank"
                                                 className="absolute top-0 left-0 w-full h-full hover:opacity-100 bg-primary-700/30
