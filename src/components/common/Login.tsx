@@ -151,7 +151,7 @@ export default function Login(props: LoginProps) {
 const LoginLogo = () => {
     return (
         <div className="flex gap-2">
-            <Image src="/bps.svg" alt="bps logo" />
+            <img src="/bps.svg" alt="bps logo" />
             <div className='text-slate-800 font-open-sans'>
                 <div className="font-semibold text-2xl">
                     HELPDESK

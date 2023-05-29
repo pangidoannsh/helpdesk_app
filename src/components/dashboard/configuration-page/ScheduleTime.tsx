@@ -20,11 +20,12 @@ import {
     startOfWeek,
 
 } from 'date-fns';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import SelectNoBorder from '../../ui/SelectNoBorder';
 import Modal from '../../ui/Modal';
 import AuthApi from '@/services/authApi';
 import { AlertContext } from '@/context/AlertProvider';
+import { log } from 'console';
 
 const displayData = (data: any) => {
     return {
@@ -106,8 +107,11 @@ export default function ScheduleTime(props: ScheduleTimeProps) {
     function handleSave() {
         const dataPost = {
             agentId: agentSelected.value,
-            dutyTime: selectedDay
+            dutyTime: new Date(selectedDay.getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 19).replace('T', ' ')
         };
+
+
+        console.log(selectedDay);
         AuthApi.post('/time-schedule', dataPost).then(res => {
             setDataSchedule((prev: any) => [...prev, displayData(res.data)]);
             setAlert({
@@ -160,7 +164,6 @@ export default function ScheduleTime(props: ScheduleTimeProps) {
         setagentDeleteSelected(defaultAgentSelected);
         setopenModalDelete(false);
     }
-
     return (
         <>
             <div>

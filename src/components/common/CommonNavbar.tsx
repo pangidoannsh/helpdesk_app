@@ -39,7 +39,7 @@ export default function CommonNavbar({ setOpenLoginModal, setLoadingPage }: Comm
                     faq
                 </button>}
             <Link href="/" className="flex gap-4 items-center">
-                <Image src="/bps.svg" alt="bps logo" className='w-10 md:w-auto' />
+                <img src="/bps.svg" alt="bps logo" className='w-10 md:w-auto' />
                 <span className='font-open-sans hidden md:block text-2xl text-primary-600'>HELPDESK BPS Riau</span>
             </Link>
             {/* Mobile */}

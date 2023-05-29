@@ -46,7 +46,7 @@ export default function Home() {
           </div>
         </div>
         <div className="absolute right-12 top-16 -z-10">
-          <Image src="/assets/images/cs_image.png" alt="helpdesk illustration" className="hidden lg:block lg:w-[65vw] opacity-60 xl:opacity-100" />
+          <img src="/assets/images/cs_image.png" alt="helpdesk illustration" className="hidden lg:block lg:w-[65vw] opacity-60 xl:opacity-100" />
         </div>
       </div>
       <Footer />

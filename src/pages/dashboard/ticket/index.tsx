@@ -221,11 +221,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
     let dataTicket: any = [];
     let totalData: number = 0;
+
     // secara default hanya akan mengambil data dengan status open
     await api.get("/ticket?limit=10&" + query, {
         headers: { Authorization: `Bearer ${token}` }
     }).then(res => {
         dataTicket = res.data
+        // console.log(res.data.length);
+
     }).catch(err => {
     })
 
