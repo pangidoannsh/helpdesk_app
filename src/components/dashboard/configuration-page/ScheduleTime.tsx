@@ -123,7 +123,7 @@ export default function ScheduleTime(props: ScheduleTimeProps) {
                 isActived: true,
                 code: 0,
                 title: "Failed",
-                message: err.response.data.message
+                message: err.response.data.message ?? "Gagal Menugaskan Agen"
             })
         }).finally(() => setTimeout(() => closeAlert(), 2000))
         // handleAdd(agentSelected.value, selectedDay)

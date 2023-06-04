@@ -12,7 +12,6 @@ import Converter from '@/utils/converter';
 import { Icon } from '@iconify/react';
 import Modal from '@/components/ui/Modal';
 import { AlertContext } from '@/context/AlertProvider';
-import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next';
 
 interface TicketPageProps {
@@ -31,7 +30,6 @@ const columnTable = [
 ];
 
 export default function Ticket(props: TicketPageProps) {
-    const router = useRouter();
 
     const displayData = (data: any) => {
         return {
@@ -227,7 +225,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         headers: { Authorization: `Bearer ${token}` }
     }).then(res => {
         dataTicket = res.data
-        // console.log(res.data.length);
+        // console.log(res.data);
 
     }).catch(err => {
     })
