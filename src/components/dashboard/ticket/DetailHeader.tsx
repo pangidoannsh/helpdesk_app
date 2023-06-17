@@ -257,7 +257,7 @@ export default function DetailHeader(props: DetailHeaderProps) {
                                 {checkExtension(detail.fileAttachment, ['.jpg', '.png', '.jpeg', '.webp']) ?
                                     <div className={`${openFile ? 'h-auto' : 'h-0'} overflow-hidden duration-300`}>
                                         <div className="relative w-max rounded overflow-hidden">
-                                            <Image alt="file_lampiran" src={`${BASE_URL}/file/${detail.fileAttachment}`}
+                                            <img alt="file_lampiran" src={`${BASE_URL}/file/${detail.fileAttachment}`}
                                                 className="max-w-[50vw]  
                                         lg:max-h-52" />
                                             <Link href={`${BASE_URL}/file/${detail.fileAttachment}`} target="_blank"
