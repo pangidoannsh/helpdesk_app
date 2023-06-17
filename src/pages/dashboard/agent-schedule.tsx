@@ -30,6 +30,7 @@ export default function AgentSchedulePage(props: ConfigurationProps) {
         value: props.base,
         display: props.base === "time" ? "Waktu" : "Fungsi"
     });
+    // console.log(props.timeSchedule);
 
     return (
         <DashboardLayout title='Configuration | Helpdesk IT'>
