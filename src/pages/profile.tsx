@@ -1,3 +1,4 @@
+import EditPassword from '@/components/common/EditPassword';
 import CommonLayout from '@/components/layouts/Common';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
@@ -70,16 +71,22 @@ export default function ProfilePage(props: ProfileProps) {
     }, [user])
     return (
         <CommonLayout title='Profile | Helpdesk IT'>
-            <Card className='absolute flex flex-col gap-6 p-9 left-1/2 -translate-x-1/2 top-32 w-1/2'>
-                <h1 className='text-4xl text-primary-700 font-medium font-open-sans uppercase'>Profile</h1>
-                <Input defaultValue={props.currentPhone} inputRef={phoneNumRef} className='rounded-md ' label='Nomor Telepon' />
-                <Input defaultValue={user.name} inputRef={nameRef} className='rounded-md ' label='Nama' />
-                <Select useSelect={[selectedFungsi, setSelectedFungsi]} options={fungsiOptions} label='Fungsi' className='rounded-md' />
-                <Select useSelect={[selectedLevel, setSelectedLevel]} options={levelOptions} label='Level' className='rounded-md' />
-                <Button className='text-white rounded-md py-2 font-medium' onClick={handleSubmit}>
-                    SUBMIT
-                </Button>
-            </Card>
+            <section className='absolute left-1/2 -translate-x-1/2 top-32 w-1/2'>
+                <Card className='flex flex-col gap-6 p-9 rounded-md'>
+                    <h1 className='text-4xl text-primary-700 font-medium font-open-sans uppercase'>Profile</h1>
+                    <Input defaultValue={props.currentPhone} inputRef={phoneNumRef} className='rounded-md ' label='Nomor Telepon' />
+                    <Input defaultValue={user.name} inputRef={nameRef} className='rounded-md ' label='Nama' />
+                    <Select useSelect={[selectedFungsi, setSelectedFungsi]} options={fungsiOptions} label='Fungsi' className='rounded-md' />
+                    <Select useSelect={[selectedLevel, setSelectedLevel]} options={levelOptions} label='Level' className='rounded-md' />
+                    <Button className='text-white rounded-md py-2 font-medium' onClick={handleSubmit}>
+                        SUBMIT
+                    </Button>
+                </Card>
+                <Card className='flex flex-col gap-6 p-9 mt-6 rounded-md'>
+                    <h1 className='text-4xl text-primary-700 font-medium font-open-sans uppercase'>Ubah Password</h1>
+                    <EditPassword />
+                </Card>
+            </section>
         </CommonLayout>
     )
 }
