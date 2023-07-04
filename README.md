@@ -1,16 +1,30 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Ticketing System Helpdesk IT (Frontend)
+program frontend ini dikembangkan dengan menggunakan framewortk NextJs yang merupakan framework untuk library ReactJs
 
 ## Getting Started
-
-First, run the development server:
+clone atau download folder project ini lalu, ketikkan pada terminal
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+yarn
 ```
+untuk melakukan instalasi package atau dependency pada aplikasi frontend ini.
+
+# Run pada mode development
+```bash
+yarn dev
+```
+
+# Run pada mode production
+```bash
+yarn build
+# setelah itu
+yarn start
+```
+
+# Konfigurasi
+secara default, aplikasi frontend ini menggunakan API dengan base url http://localhost:3001, untuk dapat mengubah base url API nya dapat dilakukan pada file 
+baseUrl.ts yang ada pada direktori /src/config
+
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
