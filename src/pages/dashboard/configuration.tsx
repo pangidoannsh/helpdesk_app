@@ -26,7 +26,7 @@ const baseScheduleOptions = [
 ]
 const modeSystemOptions = [
     { value: 1, display: "Ready" },
-    { value: 2, display: "Maintenace" }
+    { value: 2, display: "Maintenance" }
 ]
 
 export default function ConfigurationPage(props: ConfigurationProps) {

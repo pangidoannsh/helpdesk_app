@@ -62,7 +62,7 @@ export default function Carousel() {
 
     return (
         <div className="lg:w-[640px] overflow-hidden hidden lg:block relative -translate-y-4">
-            <div className="flex w-max duration-300" style={{ translate: `${slidePos}px 0` }}>
+            <div className="flex w-max duration-500" style={{ translate: `${slidePos}px 0` }}>
                 {slides.map((slide, index: number) => (
                     <div key={index} className="lg:w-[640px] flex flex-col text-center">
                         <div>
