@@ -27,6 +27,7 @@ yarn start
 secara default, aplikasi frontend ini menggunakan API dengan base url http://localhost:3001, untuk dapat mengubah base url API nya dapat dilakukan pada file 
 baseUrl.ts yang ada pada direktori /src/config
 
+![Screenshot_30]([https://github.com/pangidoannsh/helpdesk_api/assets/74215225/ee87b769-493e-428f-9f02-459421c34bea](https://user-images.githubusercontent.com/74215225/250711336-a3559218-a8b3-47ab-b13d-6f2551b5836a.png))
 
 Buka [http://localhost:3000](http://localhost:3000) di browser untuk melihat hasil aplikasi.
 
