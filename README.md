@@ -24,8 +24,7 @@ yarn start
 ```
 
 ### Konfigurasi
-secara default, aplikasi frontend ini menggunakan API dengan base url http://localhost:3001, untuk dapat mengubah base url API nya dapat dilakukan pada file 
-baseUrl.ts yang ada pada direktori `/src/config`
+secara default, aplikasi frontend ini menggunakan API dengan base url http://localhost:3001, untuk dapat mengubah base url API nya dapat dilakukan pada file direktori `/src/config/baseUrl.ts`
 
 ![Screenshot_30](https://user-images.githubusercontent.com/74215225/250711336-a3559218-a8b3-47ab-b13d-6f2551b5836a.png)
 
