@@ -1,4 +1,4 @@
-## Ticketing System Helpdesk IT (Frontend)
+# Ticketing System Helpdesk IT (Frontend)
 program frontend ini dikembangkan dengan menggunakan framewortk NextJs yang merupakan framework untuk library ReactJs
 
 ## Getting Started
@@ -9,19 +9,21 @@ yarn
 ```
 untuk melakukan instalasi package atau dependency pada aplikasi frontend ini.
 
-# Run pada mode development
+### Run pada mode development
 ```bash
 yarn dev
 ```
 
-# Run pada mode production
+### Run pada mode production
 ```bash
 yarn build
-# setelah itu
+```
+command diatas merupakan command untuk melakukan build pada aplikasi frontend ini, setelahnya dapat menjalankan aplikasi dengan 
+```bash
 yarn start
 ```
 
-# Konfigurasi
+### Konfigurasi
 secara default, aplikasi frontend ini menggunakan API dengan base url http://localhost:3001, untuk dapat mengubah base url API nya dapat dilakukan pada file 
 baseUrl.ts yang ada pada direktori /src/config
 
