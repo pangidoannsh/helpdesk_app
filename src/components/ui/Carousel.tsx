@@ -1,5 +1,4 @@
 import { Icon } from "@iconify/react"
-import Image from "next/image";
 import { useEffect, useState } from "react"
 
 const slides = [
@@ -67,7 +66,7 @@ export default function Carousel() {
                 {slides.map((slide, index: number) => (
                     <div key={index} className="lg:w-[640px] flex flex-col text-center">
                         <div>
-                            <Image src={slide.image} alt="buat tiket" className="lg:h-[392px] mx-auto" />
+                            <img src={slide.image} alt="buat tiket" className="lg:h-[392px] mx-auto" />
                         </div>
                         <div className="font-medium text-primary-600 text-4xl">{slide.title}</div>
                         <div className="text-slate-600 font-open-sans text-xl">{slide.desc}</div>
