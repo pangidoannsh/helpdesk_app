@@ -9,6 +9,7 @@ import {
     getMonth,
     getYear,
     isEqual,
+    isSameDay,
     isSameMonth,
     isSameYear,
     isToday,
@@ -161,6 +162,9 @@ export default function ScheduleTime(props: ScheduleTimeProps) {
         setagentDeleteSelected(defaultAgentSelected);
         setopenModalDelete(false);
     }
+    // console.log(dataSchedule.map((data: any) => parseISO(data.time)));
+    // console.log(days.map((day: any) => dataSchedule.findIndex((schedule: any) => isSameDay(day, parseISO(schedule.time))) !== -1 ? 'x' : ''));
+
     return (
         <>
             <div>
@@ -213,7 +217,7 @@ export default function ScheduleTime(props: ScheduleTimeProps) {
                                         ${'Sat Sun'.includes(format(day, 'EEE')) ? 'text-red-500' : ''}
                                         ${isToday(day) ? 'text-primary-700 font-semibold' : ''}
                                         ${isEqual(day, selectedDay) ? 'bg-primary-600 text-white' :
-                                                dataSchedule.findIndex((data: any) => isEqual(day, parseISO(data.time))) !== -1 ?
+                                                dataSchedule.findIndex((data: any) => isSameDay(day, parseISO(data.time))) !== -1 ?
                                                     'bg-emerald-500 text-white' : ''}
                                         ${!isSameMonth(day, firstDayCurrentMonth) ? 'text-slate-400' : ''}
                                         `}
@@ -222,14 +226,6 @@ export default function ScheduleTime(props: ScheduleTimeProps) {
                                             {format(day, 'd')}
                                         </time>
                                     </button>
-
-                                    {/* <div className="w-1 h-1 mx-auto mt-1">
-                                        {meetings.some((meeting) =>
-                                            isSameDay(parseISO(meeting.startDatetime), day)
-                                        ) && (
-                                                <div className="w-1 h-1 rounded-full bg-sky-500"></div>
-                                            )}
-                                    </div> */}
                                 </div>
                             ))}
                         </div>
@@ -242,7 +238,7 @@ export default function ScheduleTime(props: ScheduleTimeProps) {
                             </time>
                         </h2>
                         <div className="mt-4 mb-2 space-y-1 text-sm leading-6 text-gray-500 ">
-                            {dataSchedule.filter((data: any) => isEqual(parseISO(data.time), selectedDay))
+                            {dataSchedule.filter((data: any) => isSameDay(parseISO(data.time), selectedDay))
                                 .map((agent: any, index: number) => (
                                     <div className='flex gap-1 items-center' key={index}>
                                         <button onClick={() => setUpDelete(agent)}>
